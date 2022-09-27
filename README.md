@@ -20,3 +20,10 @@ Growing up, I've realized that skincare can be complicated, not to mention a
 source of vulnerability for young adults. I've tried a number of different products 
 before finding the right fit, so I'm creating a program that will remove the 
 excess time and money in this process so others can feel confident in their skin from day one.
+
+### User Stories
+
+- As a user, I want to be directed to products that target my skin type and needs.
+- As a user, I want to add products to my shopping cart.
+- As a user, I want to access the description and ingredients of a product recommended to me.
+- As a user, I want to remove a product from my shopping cart.
