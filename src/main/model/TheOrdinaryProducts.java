@@ -5,7 +5,7 @@ package model;
 public class TheOrdinaryProducts {
     public void getTheOrdinaryProducts() {
         //MOISTURIZERS
-        Product naturalMoisturizer = new Moisturizer("Natural Moisturizer","Keeps the outer layer "
+        Product naturalMoisturizer = new Moisturizer("Natural Moisturizer", "Keeps the outer layer "
                 + "of your skin protected and well-hydrated, without feeling greasy.", "Sodium Hyaluronate, "
                 + "Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals", 11.50);
 

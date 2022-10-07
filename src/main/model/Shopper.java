@@ -11,12 +11,12 @@ public class Shopper {
     double maxPrice;
 
     //REQUIRES: Shopper name must be non-zero length and maxPrice must be > 0.
-    //EFFECTS: creates a shopper with a name, skin type, and maxPrice
-    public Shopper(String name, SkinType skinType, Integer maxPrice) {
-        this.customerName = name;
+    //EFFECTS: creates a shopper object with an empty name, no declared skin type, and maxPrice is 0.00.
+    public Shopper() {
+        this.customerName = "";
         this.concerns = new ArrayList<>();
-        this.skinType = skinType;
-        this.maxPrice = maxPrice;
+        this.skinType = null;
+        this.maxPrice = 0.00;
     }
 
     //getters

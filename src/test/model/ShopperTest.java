@@ -12,7 +12,10 @@ public class ShopperTest {
 
     @BeforeEach
     public void setup() {
-        shopper = new Shopper("Rowan", SkinType.OILY, 30);
+        shopper = new Shopper();
+        shopper.setName("Rowan");
+        shopper.setSkinType(SkinType.OILY);
+        shopper.setMaxPrice(30);
 
     }
 
