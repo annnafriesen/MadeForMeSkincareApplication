@@ -44,7 +44,7 @@ public class Shopper {
     //MODIFIES: this
     //EFFECTS: sets customer name to n
     public void setName(String n) {
-        customerName = n;
+        this.customerName = n;
     }
 
 
