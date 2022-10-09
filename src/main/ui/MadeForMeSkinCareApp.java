@@ -2,9 +2,6 @@ package ui;
 
 import model.*;
 
-import java.lang.module.FindException;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,9 +9,14 @@ import java.util.Scanner;
 public class MadeForMeSkinCareApp {
     private Shopper shopper;
     private ShoppingCart shoppingCart;
-    private TheOrdinaryProducts theOrdinaryProducts;
     private List<Product> listOfOrdinaryProducts;
     private Scanner input;
+
+    private static final String ADD_COMMAND = "'add'";
+    private static final String REMOVE_COMMAND = "'remove'";
+    private static final String RECOMMENDATION_COMMAND = "'back'";
+    private static final String WISHLIST_COMMAND = "'wishlist'";
+    private static final String VIEW_CART_COMMAND = "'shopping cart'";
 
     //EFFECTS: runs the MadeForMe Skin Care app
     public MadeForMeSkinCareApp() {
@@ -31,16 +33,16 @@ public class MadeForMeSkinCareApp {
         String command = null;
 
         init();
+        startHomeScreen();
 
         while (keepGoing) {
-            startHomeScreen();
             command = input.next();
             command = command.toLowerCase();
 
             if (command.equals("q")) {
                 keepGoing = false;
             } else {
-                startQuestionnaire();
+                processCommand(command);
             }
         }
         System.out.println("Thank you for using the MadeForMe SkinCare App. "
@@ -50,7 +52,7 @@ public class MadeForMeSkinCareApp {
     // MODIFIES: this
     // EFFECTS: initializes shopper and shopping cart objects
     private void init() {
-        theOrdinaryProducts = new TheOrdinaryProducts();
+        TheOrdinaryProducts theOrdinaryProducts = new TheOrdinaryProducts();
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
         shopper = new Shopper();
         shoppingCart = new ShoppingCart(shopper);
@@ -60,17 +62,32 @@ public class MadeForMeSkinCareApp {
 
     // MODIFIES: this
     // EFFECTS: processes user command
+    //TODO: too long
     private void processCommand(String command) {
-        if (command.equals("a")) {
-            addToCart();
-        } else if (command.equals("r")) {
-            removeFromCart();
-        } else if (command.equals("w")) {
-            printWishList();
-        } else if (command.equals("c")) {
-            printShoppingCart();
-        } else {
-            System.out.println("Selection not valid...");
+        switch (command) {
+            case "o":
+            case "c":
+            case "d":
+                setSkinType(command);
+                break;
+            case "a":
+            case "h":
+            case "dr":
+            case "r":
+                setConcernType(command);
+                break;
+            case REMOVE_COMMAND:
+                removeFromCart();
+                break;
+            case WISHLIST_COMMAND:
+                viewWishList();
+                break;
+            case VIEW_CART_COMMAND:
+                viewShoppingCart();
+                break;
+            default:
+                System.out.println("Selection not valid...");
+                break;
         }
     }
 
@@ -80,73 +97,63 @@ public class MadeForMeSkinCareApp {
         System.out.println("\to -> Oily");
         System.out.println("\tc -> Combination");
         System.out.println("\td -> Dry");
-        System.out.println("\tq -> quit");
+        System.out.println("\tq -> Quit questionnaire");
     }
 
     // EFFECTS: displays menu of concern type options to user
     private void displayConcernTypeOptions() {
         System.out.println("\nSelect from:");
         System.out.println("\ta -> Acne");
-        System.out.println("\ty -> Dryness");
+        System.out.println("\tdr -> Dryness");
         System.out.println("\th -> Hyperpigmentation");
         System.out.println("\tr -> Redness");
-        System.out.println("\tq -> quit");
+        System.out.println("\tq -> Quit questionnaire");
+    }
+
+    // EFFECTS: displays menu of options to user
+    private void displayListOptions() {
+        System.out.println("Type " + RECOMMENDATION_COMMAND + " to view recommendation list");
+        System.out.println("Type " + WISHLIST_COMMAND + " to view wishlist");
+        System.out.println("Type " + VIEW_CART_COMMAND + " to view your shopping cart");
     }
 
 
     //MODIFIES: this
     //EFFECTS: asks the shopper questions
     private void startHomeScreen() {
-        System.out.println("Welcome to MadeForMe! Please enter your name:");
+        System.out.println("Welcome to MadeForMe SkinCare! Please enter your name:");
         String name = input.nextLine();
         shopper = new Shopper();
         shopper.setName(name);
 
         System.out.println("Hello, " + shopper.getCustomerName() + "! Answer the following questions to help us find "
-                + "the best products for you.");
+                + "the best products for you. Press any key to continue.");
+        startQuestionnaire();
     }
 
     //MODIFIES: this
     //EFFECTS: asks the shopper questions
-    //TODO: should this be done this way? too long?
     private void startQuestionnaire() {
         String command;
         command = input.next();
         command = command.toLowerCase();
-        System.out.println("Please select your skin type:\n");
+        System.out.println("Please select your skin type:");
         displaySkinTypeOptions();
-        String skinType = input.nextLine();
-        setSkinType(skinType);
+    }
+
+    private void setSkinType(String command) {
+        switch (command) {
+            case ("o"):
+                shopper.setSkinType(SkinType.OILY);
+            case ("d"):
+                shopper.setSkinType(SkinType.DRY);
+            case ("c"):
+                shopper.setSkinType(SkinType.COMBINATION);
+        }
+
         System.out.println("Please select your max price range for the total cost of products:\n");
         Double maxPrice = input.nextDouble();
         setMaxPrice(maxPrice);
-        System.out.println("Please select skin concerns you would like addressed:\n");
-        displayConcernTypeOptions();
-        String concernType = input.nextLine();
-        setConcernType(concernType);
-        System.out.println("Creating personalized skin care routine...:\n");
-        createRecommendations();
-        printRecommendationList();
-        processCommand(command);
-    }
-
-    //MODIFIES: this
-    //EFFECTS: sets the users skin type to oily, combo or dry
-    private void setSkinType(String skinType) {
-        switch (skinType) {
-            case "o":
-                shopper.setSkinType(SkinType.OILY);
-                break;
-            case "c":
-                shopper.setSkinType(SkinType.COMBINATION);
-                break;
-            case "d":
-                shopper.setSkinType(SkinType.DRY);
-                break;
-            default:
-                System.out.println("Please select valid option.");
-                break;
-        }
     }
 
 
@@ -158,92 +165,134 @@ public class MadeForMeSkinCareApp {
         } else {
             System.out.println("Max price must be at least one cent!\n");
         }
+
+        System.out.println("Please select skin concerns you would like addressed:");
+        displayConcernTypeOptions();
     }
 
     //MODIFIES: this
     //EFFECTS: sets the users skin type to oily, combo or dry
-    private void setConcernType(String concernType) {
-        switch (concernType) {
+    private void setConcernType(String command) {
+        switch (command) {
             case "a":
-                shopper.setConcerns(ConcernType.ACNE);
+                shopper.setConcern(ConcernType.ACNE);
                 break;
             case "h":
-                shopper.setConcerns(ConcernType.HYPERPIGMENTATION);
+                shopper.setConcern(ConcernType.HYPERPIGMENTATION);
                 break;
-            case "d":
-                shopper.setConcerns(ConcernType.DRYNESS);
+            case "dr":
+                shopper.setConcern(ConcernType.DRYNESS);
                 break;
             case "r":
-                shopper.setConcerns(ConcernType.REDNESS);
+                shopper.setConcern(ConcernType.REDNESS);
                 break;
             default:
                 System.out.println("Please select valid option.");
                 break;
         }
+
+        System.out.println("Creating personalized skin care routine...");
+        System.out.println("Here are your results!");
+        createRecommendations();
     }
 
     //EFFECTS: shows recommendations for the Ordinary Products based on users answers, and adds products starting
     // from most recommended to least recommended (always recommends moisturizer and cleanser)
     private void createRecommendations() {
-        List<ConcernType> concerns = shopper.getConcerns();
-        if (concerns.contains(ConcernType.ACNE)) {
+        ConcernType concern = shopper.getConcern();
+        if (concern.equals(ConcernType.ACNE)) {
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(6));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(1));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(4));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
-        } else if (concerns.contains(ConcernType.DRYNESS)) {
+        } else if (concern.equals(ConcernType.DRYNESS)) {
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(5));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
-        } else if (concerns.contains(ConcernType.HYPERPIGMENTATION)) {
+        } else if (concern.equals(ConcernType.HYPERPIGMENTATION)) {
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(2));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(6));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
-        } else if (concerns.contains(ConcernType.REDNESS)) {
+        } else if (concern.equals(ConcernType.REDNESS)) {
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(7));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(3));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
         }
 
+        printRecommendationList();
     }
 
     //EFFECTS: prints recommendation list in format # -> ProductName
     public void printRecommendationList() {
         for (Product p : shoppingCart.getRecommendationList()) {
             int index = shoppingCart.getRecommendationList().indexOf(p);
-            System.out.println(index + "-> " + p.getProductName());
+            System.out.println((index + 1) + "." + p.getProductName());
+        }
+        System.out.println("To read the description, get ingredient list, or add a product, please type the "
+                + "product number below.");
+        viewProductDetails();
+    }
+
+
+    //EFFECTS: allows user to access description, ingredients and price of product and then gives them
+    // the option to add the product to their cart.
+    public void viewProductDetails() {
+        //TODO: is there a way to make command type a int?
+        int productNumber = input.nextInt();
+        Product product = shoppingCart.getRecommendationList().get(productNumber - 1);
+        System.out.println("\n" + product.getProductName() + ":");
+        System.out.println(product.getDescription());
+        System.out.println("Ingredient Lists: " + product.getIngredients());
+        System.out.println("Priced at $" + product.getPrice());
+        System.out.println("To add this product to your cart, type " + ADD_COMMAND);
+        System.out.println("To return to your recommendation list, type 'back'");
+
+        if (input.next().equals("add")) {
+            addToCart(productNumber - 1);
+        } else {
+            if (input.next().equals("back")) {
+                printRecommendationList();
+            }
         }
     }
 
-    //EFFECTS: asks user to add products to cart
-    private void addToCart() {
-        //TODO: is this right?
-        int productNumber = input.nextInt();
-        shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber));
+    //EFFECTS: tries to add product to shopping cart, and tells user if successful or not
+    private void addToCart(int productNumber) {
+        //TODO: how to add to cart?? Not working
+        if (shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber))) {
+            System.out.println("The product was added to your shopping cart!");
+        } else {
+            System.out.println("Product cannot be added to cart as price limit is reached, but it has been added to "
+                    + "your wish list.");
+        }
+        displayListOptions();
     }
 
     //EFFECTS: asks user to add products to cart
     private void removeFromCart() {
-        for (Product p : shoppingCart.getProductsInCart()) {
-            int index = shoppingCart.getProductsInCart().indexOf(p);
-            System.out.println(index + "-> " + p.getProductName());
-            int productNumber = input.nextInt();
-            shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber));
-        }
+        int productNumber = input.nextInt();
+        shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber));
     }
 
     //EFFECTS: prints shopping cart
-    private void printShoppingCart() {
+    private void viewShoppingCart() {
         for (Product p : shoppingCart.getRecommendationList()) {
-            System.out.println(p.getProductName());
+            int index = shoppingCart.getProductsInCart().indexOf(p);
+            System.out.println(index + "-> " + p.getProductName());
         }
+
+        System.out.println("To remove a product, type 'remove'");
+        if (input.next().equals("remove")) {
+            removeFromCart();
+        }
+        displayListOptions();
     }
 
     //EFFECTS: prints wish list
-    private void printWishList() {
+    private void viewWishList() {
         for (Product p : shoppingCart.getWishList()) {
             System.out.println(p.getProductName());
         }

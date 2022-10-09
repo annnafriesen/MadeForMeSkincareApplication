@@ -8,6 +8,7 @@ import java.util.List;
 // Each product has a name, description, ingredient list and price attached to it.
 public class TheOrdinaryProducts {
     //MOISTURIZERS
+    //TODO: how to make sure 0 doesn't disappear when calling price?
     Product naturalMoisturizer = new Moisturizer("Natural Moisturizer", "Keeps the outer layer "
             + "of your skin protected and well-hydrated, without feeling greasy.", "Sodium Hyaluronate, "
             + "Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals", 11.50);

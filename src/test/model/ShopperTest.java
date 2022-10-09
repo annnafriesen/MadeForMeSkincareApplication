@@ -3,8 +3,6 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShopperTest {
@@ -26,22 +24,9 @@ public class ShopperTest {
     }
 
     @Test
-    void testSetConcernsFirstConcern() {
-        shopper.setConcerns(ConcernType.ACNE);
-        assertTrue(shopper.getConcerns().contains(ConcernType.ACNE));
-        assertEquals(1, shopper.getConcerns().size());
-    }
-
-    @Test
-    void testSetConcernsSecondConcern() {
-        shopper.setConcerns(ConcernType.ACNE);
-        assertTrue(shopper.getConcerns().contains(ConcernType.ACNE));
-        assertEquals(1, shopper.getConcerns().size());
-
-        shopper.setConcerns(ConcernType.HYPERPIGMENTATION);
-        assertTrue(shopper.getConcerns().contains(ConcernType.HYPERPIGMENTATION));
-        assertTrue(shopper.getConcerns().contains(ConcernType.ACNE));
-        assertEquals(2, shopper.getConcerns().size());
+    void testSetConcern() {
+        shopper.setConcern(ConcernType.ACNE);
+        assertEquals(ConcernType.ACNE, shopper.getConcern());
     }
 
     @Test

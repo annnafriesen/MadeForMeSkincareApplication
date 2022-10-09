@@ -1,12 +1,9 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // Represents a shopper with a name, skin type, and their max price range for shopping.
 public class Shopper {
     String customerName;
-    List<ConcernType> concerns;
+    ConcernType concern;
     SkinType skinType;
     double maxPrice;
 
@@ -14,7 +11,7 @@ public class Shopper {
     //EFFECTS: creates a shopper object with an empty name, no declared skin type, and maxPrice is 0.00.
     public Shopper() {
         this.customerName = "";
-        this.concerns = new ArrayList<>();
+        this.concern = null;
         this.skinType = null;
         this.maxPrice = 0.00;
     }
@@ -26,8 +23,8 @@ public class Shopper {
     }
 
     //EFFECTS: returns the shopper's list of concerns
-    public List<ConcernType> getConcerns() {
-        return concerns;
+    public ConcernType getConcern() {
+        return concern;
     }
 
     //EFFECTS: returns the shopper's skin type
@@ -50,8 +47,8 @@ public class Shopper {
 
     //MODIFIES: this
     //EFFECTS: adds concerns to the shoppers list of concerns
-    public void setConcerns(ConcernType c) {
-        concerns.add(c);
+    public void setConcern(ConcernType c) {
+        concern = c;
     }
 
     //MODIFIES: this

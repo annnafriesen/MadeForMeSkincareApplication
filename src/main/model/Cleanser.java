@@ -12,7 +12,7 @@ public class Cleanser implements Product {
     //EFFECTS:
     public Cleanser(String name, String description, String ingredients, double price) {
         this.productName = name;
-        this.productType = "Cleaner";
+        this.productType = "Cleanser";
         this.productDescription = description;
         this.productIngredients = ingredients;
         this.price = price;
