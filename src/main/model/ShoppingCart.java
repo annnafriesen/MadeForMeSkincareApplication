@@ -52,7 +52,7 @@ public class ShoppingCart {
     //         is less than the shoppers max price limit and returns true. Otherwise, returns false and adds
     //         product to a wishlist for future purchases.
     public Boolean addProductToCart(Product p) {
-        if (p.getPrice() + totalCost <= shopper.getMaxPrice()) {
+        if (p.getPrice() + this.totalCost <= shopper.getMaxPrice()) {
             this.productsInCart.add(p);
             this.totalCost += p.getPrice();
             checkForDiscount();

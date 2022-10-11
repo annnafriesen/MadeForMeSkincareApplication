@@ -28,7 +28,7 @@ public class TheOrdinaryProducts {
 
     //SERUMS
     Product niacinamide10Percent = new Serum("Niacinamide 10% and Zinc 1%", "A universal "
-            + "serum for blemish-prone skin that smooths brightens, and supports", "Niacinamide, "
+            + "serum for blemish-prone skin that smooths brightens, and supports skin health", "Niacinamide,"
             + "Zinc PCA", 12.80);
 
     Product hyaluronicAcid2Percent = new Serum("Hyaluronic Acid 2% + B5", "A hydrator "

@@ -27,3 +27,4 @@ excess time and money in this process so others can feel confident in their skin
 - As a user, I want to add products to my shopping cart.
 - As a user, I want to access the description and ingredients of a product recommended to me.
 - As a user, I want to remove a product from my shopping cart.
+- As a user, I want to have a wishlist of items I can't afford at the present time.

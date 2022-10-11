@@ -18,6 +18,7 @@ public class Cleanser implements Product {
         this.price = price;
     }
 
+    //TODO : need specification for getters?
     @Override
     public String getProductName() {
         return productName;

@@ -44,24 +44,23 @@ public class Shopper {
         this.customerName = n;
     }
 
-
     //MODIFIES: this
     //EFFECTS: adds concerns to the shoppers list of concerns
     public void setConcern(ConcernType c) {
-        concern = c;
+        this.concern = c;
     }
 
     //MODIFIES: this
     //EFFECTS: sets the users skin type as either oily, combination or dry
     public void setSkinType(SkinType type) {
-        skinType = type;
+        this.skinType = type;
     }
 
     //REQUIRES: input i must be > 0.
     //MODIFIES: this
     //EFFECTS: sets the users max price as given
     public void setMaxPrice(double i) {
-        maxPrice = i;
+        this.maxPrice = i;
     }
 
 }

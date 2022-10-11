@@ -5,6 +5,8 @@ import model.*;
 import java.util.List;
 import java.util.Scanner;
 
+import static model.ShoppingCart.DISCOUNT;
+
 // MadeForMe SkinCare Application
 public class MadeForMeSkinCareApp {
     private Shopper shopper;
@@ -12,11 +14,11 @@ public class MadeForMeSkinCareApp {
     private List<Product> listOfOrdinaryProducts;
     private Scanner input;
 
-    private static final String ADD_COMMAND = "'add'";
-    private static final String REMOVE_COMMAND = "'remove'";
-    private static final String RECOMMENDATION_COMMAND = "'back'";
-    private static final String WISHLIST_COMMAND = "'wishlist'";
-    private static final String VIEW_CART_COMMAND = "'shopping cart'";
+    private static final String ADD_COMMAND = "add";
+    private static final String REMOVE_COMMAND = "remove";
+    private static final String RECOMMENDATION_COMMAND = "back";
+    private static final String WISHLIST_COMMAND = "wishlist";
+    private static final String VIEW_CART_COMMAND = "shopping cart";
 
     //EFFECTS: runs the MadeForMe Skin Care app
     public MadeForMeSkinCareApp() {
@@ -76,8 +78,8 @@ public class MadeForMeSkinCareApp {
             case "r":
                 setConcernType(command);
                 break;
-            case REMOVE_COMMAND:
-                removeFromCart();
+            case RECOMMENDATION_COMMAND:
+                printRecommendationList();
                 break;
             case WISHLIST_COMMAND:
                 viewWishList();
@@ -110,16 +112,16 @@ public class MadeForMeSkinCareApp {
         System.out.println("\tq -> Quit questionnaire");
     }
 
-    // EFFECTS: displays menu of options to user
+    // EFFECTS: displays menu of product list option, such as recommendation list, wishlist and shopping cart to user
     private void displayListOptions() {
-        System.out.println("Type " + RECOMMENDATION_COMMAND + " to view recommendation list");
-        System.out.println("Type " + WISHLIST_COMMAND + " to view wishlist");
-        System.out.println("Type " + VIEW_CART_COMMAND + " to view your shopping cart");
+        System.out.println("Type '" + RECOMMENDATION_COMMAND + "' to view recommendation list");
+        System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
+        System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
     }
 
 
     //MODIFIES: this
-    //EFFECTS: asks the shopper questions
+    //EFFECTS: displays MadeForMe SkinCare brand message and asks for users name
     private void startHomeScreen() {
         System.out.println("Welcome to MadeForMe SkinCare! Please enter your name:");
         String name = input.nextLine();
@@ -132,15 +134,16 @@ public class MadeForMeSkinCareApp {
     }
 
     //MODIFIES: this
-    //EFFECTS: asks the shopper questions
+    //EFFECTS: asks the shopper the first questionnaire question (what is your skin type?)
     private void startQuestionnaire() {
-        String command;
-        command = input.next();
+        String command = input.next();
         command = command.toLowerCase();
         System.out.println("Please select your skin type:");
         displaySkinTypeOptions();
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets the users skin type
     private void setSkinType(String command) {
         switch (command) {
             case ("o"):
@@ -156,7 +159,6 @@ public class MadeForMeSkinCareApp {
         setMaxPrice(maxPrice);
     }
 
-
     //MODIFIES: this
     //EFFECTS: sets the users maxPrice
     private void setMaxPrice(Double maxPrice) {
@@ -166,7 +168,7 @@ public class MadeForMeSkinCareApp {
             System.out.println("Max price must be at least one cent!\n");
         }
 
-        System.out.println("Please select skin concerns you would like addressed:");
+        System.out.println("Please select the main skin concern you would like addressed:");
         displayConcernTypeOptions();
     }
 
@@ -185,9 +187,6 @@ public class MadeForMeSkinCareApp {
                 break;
             case "r":
                 shopper.setConcern(ConcernType.REDNESS);
-                break;
-            default:
-                System.out.println("Please select valid option.");
                 break;
         }
 
@@ -238,32 +237,39 @@ public class MadeForMeSkinCareApp {
 
 
     //EFFECTS: allows user to access description, ingredients and price of product and then gives them
-    // the option to add the product to their cart.
+    // the option to add the product to their cart or return to the recommendation list
     public void viewProductDetails() {
         //TODO: is there a way to make command type a int?
-        int productNumber = input.nextInt();
-        Product product = shoppingCart.getRecommendationList().get(productNumber - 1);
+        int recommendationNumber = input.nextInt();
+        Product product = shoppingCart.getRecommendationList().get(recommendationNumber - 1);
         System.out.println("\n" + product.getProductName() + ":");
         System.out.println(product.getDescription());
         System.out.println("Ingredient Lists: " + product.getIngredients());
         System.out.println("Priced at $" + product.getPrice());
-        System.out.println("To add this product to your cart, type " + ADD_COMMAND);
-        System.out.println("To return to your recommendation list, type 'back'");
+        System.out.println("\nTo add this product to your cart, type '" + ADD_COMMAND + "'");
+        System.out.println("To return to your recommendation list, type '" + RECOMMENDATION_COMMAND + "'");
 
-        if (input.next().equals("add")) {
-            addToCart(productNumber - 1);
+        String nextCommand = input.next();
+        if (nextCommand.equals(ADD_COMMAND)) {
+            addToCart(recommendationNumber - 1);
+
         } else {
-            if (input.next().equals("back")) {
+            if (nextCommand.equals(RECOMMENDATION_COMMAND)) {
                 printRecommendationList();
             }
         }
     }
 
+    //MODIFIES: this
+    //TODO: modifies this or shopping cart?
     //EFFECTS: tries to add product to shopping cart, and tells user if successful or not
     private void addToCart(int productNumber) {
         //TODO: how to add to cart?? Not working
         if (shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber))) {
             System.out.println("The product was added to your shopping cart!");
+            if (shoppingCart.checkForDiscount()) {
+                System.out.println("You received a" + DISCOUNT * 100 + "% on your purchase!");
+            }
         } else {
             System.out.println("Product cannot be added to cart as price limit is reached, but it has been added to "
                     + "your wish list.");
@@ -271,6 +277,7 @@ public class MadeForMeSkinCareApp {
         displayListOptions();
     }
 
+    //MODIFIES: this
     //EFFECTS: asks user to add products to cart
     private void removeFromCart() {
         int productNumber = input.nextInt();
@@ -279,13 +286,13 @@ public class MadeForMeSkinCareApp {
 
     //EFFECTS: prints shopping cart
     private void viewShoppingCart() {
-        for (Product p : shoppingCart.getRecommendationList()) {
+        for (Product p : shoppingCart.getProductsInCart()) {
             int index = shoppingCart.getProductsInCart().indexOf(p);
             System.out.println(index + "-> " + p.getProductName());
         }
 
         System.out.println("To remove a product, type 'remove'");
-        if (input.next().equals("remove")) {
+        if (input.next().equals(REMOVE_COMMAND)) {
             removeFromCart();
         }
         displayListOptions();
@@ -293,6 +300,7 @@ public class MadeForMeSkinCareApp {
 
     //EFFECTS: prints wish list
     private void viewWishList() {
+        System.out.println("\nYour wishlist contains:");
         for (Product p : shoppingCart.getWishList()) {
             System.out.println(p.getProductName());
         }
