@@ -27,6 +27,11 @@ public class ShoppingCart {
     }
 
     //EFFECTS: returns a list of all the products in the shopping cart
+    public Shopper getShopper() {
+        return shopper;
+    }
+
+    //EFFECTS: returns a list of all the products in the shopping cart
     public List<Product> getProductsInCart() {
         return productsInCart;
     }

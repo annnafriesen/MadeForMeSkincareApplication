@@ -13,7 +13,7 @@ public class Shopper {
         this.customerName = "";
         this.concern = null;
         this.skinType = null;
-        this.maxPrice = 0.00;
+        this.maxPrice = 0.0;
     }
 
     //getters

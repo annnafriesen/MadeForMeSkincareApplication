@@ -24,6 +24,7 @@ public class ShoppingCartTest {
     void testAddProductOneProduct() {
         Product moisturizer1 = new Moisturizer("Natural Moisturizer",
                 "Coconut oil moisturizer", "Coconut oil, aloe vera", 13.50);
+        assertEquals(shopper, shoppingCart.getShopper());
         assertTrue(shoppingCart.addProductToCart(moisturizer1));
         assertEquals(1, shoppingCart.getProductsInCart().size());
         assertEquals(13.50, shoppingCart.getTotalPrice());

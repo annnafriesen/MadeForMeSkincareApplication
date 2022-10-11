@@ -44,7 +44,7 @@ public class MadeForMeSkinCareApp {
             if (command.equals("q")) {
                 keepGoing = false;
             } else {
-                processCommand(command);
+                processCommandPart1(command);
             }
         }
         System.out.println("Thank you for using the MadeForMe SkinCare App. "
@@ -63,9 +63,8 @@ public class MadeForMeSkinCareApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user command
-    //TODO: too long
-    private void processCommand(String command) {
+    // EFFECTS: processes the first half of user commands
+    private void processCommandPart1(String command) {
         switch (command) {
             case "o":
             case "c":
@@ -78,6 +77,16 @@ public class MadeForMeSkinCareApp {
             case "r":
                 setConcernType(command);
                 break;
+            default:
+                processCommandPart2(command);
+                break;
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes the second half of user commands
+    private void processCommandPart2(String command) {
+        switch (command) {
             case RECOMMENDATION_COMMAND:
                 printRecommendationList();
                 break;
@@ -112,8 +121,17 @@ public class MadeForMeSkinCareApp {
         System.out.println("\tq -> Quit questionnaire");
     }
 
-    // EFFECTS: displays menu of product list option, such as recommendation list, wishlist and shopping cart to user
-    private void displayListOptions() {
+    // EFFECTS: displays menu when user is viewing a product, and gives them the choice to go to their recommendation
+    // list, wishlist, or shopping cart.
+    private void displayProductLocationOptions() {
+        System.out.println("Type '" + RECOMMENDATION_COMMAND + "' to view recommendation list");
+        System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
+        System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
+    }
+
+    // EFFECTS: displays menu when user is viewing their recommendation list
+    private void displayRecommendationOptions() {
+        System.out.println("\nType '" + ADD_COMMAND + "' to add product to your shopping cart");
         System.out.println("Type '" + RECOMMENDATION_COMMAND + "' to view recommendation list");
         System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
         System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
@@ -125,7 +143,6 @@ public class MadeForMeSkinCareApp {
     private void startHomeScreen() {
         System.out.println("Welcome to MadeForMe SkinCare! Please enter your name:");
         String name = input.nextLine();
-        shopper = new Shopper();
         shopper.setName(name);
 
         System.out.println("Hello, " + shopper.getCustomerName() + "! Answer the following questions to help us find "
@@ -165,7 +182,10 @@ public class MadeForMeSkinCareApp {
         if (maxPrice > 0.0) {
             shopper.setMaxPrice(maxPrice);
         } else {
-            System.out.println("Max price must be at least one cent!\n");
+            System.out.println("Max price must be at least one cent! Please enter a valid price.\n");
+            Double num = input.nextDouble();
+            shopper.setMaxPrice(num);
+
         }
 
         System.out.println("Please select the main skin concern you would like addressed:");
@@ -239,15 +259,13 @@ public class MadeForMeSkinCareApp {
     //EFFECTS: allows user to access description, ingredients and price of product and then gives them
     // the option to add the product to their cart or return to the recommendation list
     public void viewProductDetails() {
-        //TODO: is there a way to make command type a int?
         int recommendationNumber = input.nextInt();
         Product product = shoppingCart.getRecommendationList().get(recommendationNumber - 1);
         System.out.println("\n" + product.getProductName() + ":");
         System.out.println(product.getDescription());
         System.out.println("Ingredient Lists: " + product.getIngredients());
-        System.out.println("Priced at $" + product.getPrice());
-        System.out.println("\nTo add this product to your cart, type '" + ADD_COMMAND + "'");
-        System.out.println("To return to your recommendation list, type '" + RECOMMENDATION_COMMAND + "'");
+        System.out.printf("Priced at $%.2f%n", product.getPrice());
+        displayRecommendationOptions();
 
         String nextCommand = input.next();
         if (nextCommand.equals(ADD_COMMAND)) {
@@ -261,20 +279,18 @@ public class MadeForMeSkinCareApp {
     }
 
     //MODIFIES: this
-    //TODO: modifies this or shopping cart?
     //EFFECTS: tries to add product to shopping cart, and tells user if successful or not
     private void addToCart(int productNumber) {
-        //TODO: how to add to cart?? Not working
         if (shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber))) {
-            System.out.println("The product was added to your shopping cart!");
+            System.out.println("\nThe product was added to your shopping cart!");
             if (shoppingCart.checkForDiscount()) {
                 System.out.println("You received a" + DISCOUNT * 100 + "% on your purchase!");
             }
         } else {
-            System.out.println("Product cannot be added to cart as price limit is reached, but it has been added to "
+            System.out.println("\nProduct cannot be added to cart as price limit is reached, but it has been added to "
                     + "your wish list.");
         }
-        displayListOptions();
+        displayProductLocationOptions();
     }
 
     //MODIFIES: this
@@ -282,27 +298,39 @@ public class MadeForMeSkinCareApp {
     private void removeFromCart() {
         int productNumber = input.nextInt();
         shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber));
+        System.out.println("The product has been removed from your cart.");
+        displayProductLocationOptions();
     }
 
     //EFFECTS: prints shopping cart
     private void viewShoppingCart() {
-        for (Product p : shoppingCart.getProductsInCart()) {
-            int index = shoppingCart.getProductsInCart().indexOf(p);
-            System.out.println(index + "-> " + p.getProductName());
+        if (shoppingCart.getProductsInCart().isEmpty()) {
+            System.out.println("Shopping cart is currently empty.");
         }
 
-        System.out.println("To remove a product, type 'remove'");
+        for (Product p : shoppingCart.getProductsInCart()) {
+            int index = shoppingCart.getProductsInCart().indexOf(p);
+            System.out.println((index + 1) + "-> " + p.getProductName());
+        }
+
+        System.out.println("To remove a product, type 'remove' followed by the product number");
         if (input.next().equals(REMOVE_COMMAND)) {
             removeFromCart();
         }
-        displayListOptions();
+
+        displayProductLocationOptions();
     }
 
     //EFFECTS: prints wish list
     private void viewWishList() {
+        if (shoppingCart.getWishList().isEmpty()) {
+            System.out.println("Wish list is currently empty.");
+        }
+
         System.out.println("\nYour wishlist contains:");
         for (Product p : shoppingCart.getWishList()) {
             System.out.println(p.getProductName());
         }
+        displayProductLocationOptions();
     }
 }
