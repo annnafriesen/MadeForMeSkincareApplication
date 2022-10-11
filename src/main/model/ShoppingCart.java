@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Represents a virtual shopping cart for a specified shopper, and included the total cost of cart, products
+// Represents a virtual shopping cart for the specified shopper, and includes the total cost of cart, products
 // in the cart, and a wishlist.
 public class ShoppingCart {
     private List<Product> productsInCart;
@@ -13,7 +13,7 @@ public class ShoppingCart {
     private Shopper shopper;
 
     public static final double DISCOUNT = 0.15;
-    public static final double AMOUNT_NEEDED_FOR_DISCOUNT = 50.00;
+    public static final double AMOUNT_NEEDED_FOR_DISCOUNT = 50;
 
     //REQUIRES: price must be >= 0 and price = 0 only when cart is empty
     //MODIFIES: this
@@ -60,7 +60,6 @@ public class ShoppingCart {
         if (p.getPrice() + this.totalCost <= shopper.getMaxPrice()) {
             this.productsInCart.add(p);
             this.totalCost += p.getPrice();
-            checkForDiscount();
             return true;
         } else {
             wishList.add(p);

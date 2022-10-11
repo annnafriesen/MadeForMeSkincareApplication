@@ -8,7 +8,7 @@ public class Shopper {
     double maxPrice;
 
     //REQUIRES: Shopper name must be non-zero length and maxPrice must be > 0.
-    //EFFECTS: creates a shopper object with an empty name, no declared skin type, and maxPrice is 0.00.
+    //EFFECTS: creates a shopper object with an empty name, no declared skin or concern type, and maxPrice is 0.00.
     public Shopper() {
         this.customerName = "";
         this.concern = null;
@@ -38,6 +38,7 @@ public class Shopper {
     }
 
 
+    //REQUIRES: input n must be a non-empty string
     //MODIFIES: this
     //EFFECTS: sets customer name to n
     public void setName(String n) {

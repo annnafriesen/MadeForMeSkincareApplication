@@ -1,6 +1,6 @@
 package model;
 
-//Represents an exfoliator with a name, type, description, ingredients and price.
+//Represents an exfoliator with a name, type, description, ingredient list and price.
 public class Exfoliator implements Product {
     private final String productName;
     private final String productType;
@@ -8,6 +8,8 @@ public class Exfoliator implements Product {
     private final String productIngredients;
     private final double price;
 
+    //EFFECTS: creates an exfoliator with a unique name, description, ingredient list and price. Type is always set
+    // to "exfoliator"
     public Exfoliator(String name, String description, String ingredients, double price) {
         this.productName = name;
         this.productType = "Exfoliator";

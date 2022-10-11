@@ -5,6 +5,7 @@ import model.*;
 import java.util.List;
 import java.util.Scanner;
 
+import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
 import static model.ShoppingCart.DISCOUNT;
 
 // MadeForMe SkinCare Application
@@ -17,8 +18,9 @@ public class MadeForMeSkinCareApp {
     private static final String ADD_COMMAND = "add";
     private static final String REMOVE_COMMAND = "remove";
     private static final String RECOMMENDATION_COMMAND = "back";
-    private static final String WISHLIST_COMMAND = "wishlist";
-    private static final String VIEW_CART_COMMAND = "shopping cart";
+    private static final String WISHLIST_COMMAND = "wl";
+    private static final String VIEW_CART_COMMAND = "sc";
+    private static final String VIEW_CHECKOUT = "done";
 
     //EFFECTS: runs the MadeForMe Skin Care app
     public MadeForMeSkinCareApp() {
@@ -47,7 +49,7 @@ public class MadeForMeSkinCareApp {
                 processCommandPart1(command);
             }
         }
-        System.out.println("Thank you for using the MadeForMe SkinCare App. "
+        System.out.println("Thank you for using the MadeForMe SkinCare App to start your skin care journey. "
                 + "Next time turn that wishlist into reality!");
     }
 
@@ -77,6 +79,9 @@ public class MadeForMeSkinCareApp {
             case "r":
                 setConcernType(command);
                 break;
+            case REMOVE_COMMAND:
+                removeFromCart();
+                break;
             default:
                 processCommandPart2(command);
                 break;
@@ -95,6 +100,9 @@ public class MadeForMeSkinCareApp {
                 break;
             case VIEW_CART_COMMAND:
                 viewShoppingCart();
+                break;
+            case VIEW_CHECKOUT:
+                viewCheckout();
                 break;
             default:
                 System.out.println("Selection not valid...");
@@ -122,11 +130,12 @@ public class MadeForMeSkinCareApp {
     }
 
     // EFFECTS: displays menu when user is viewing a product, and gives them the choice to go to their recommendation
-    // list, wishlist, or shopping cart.
+    // list, wishlist, shopping cart, or checkout
     private void displayProductLocationOptions() {
         System.out.println("Type '" + RECOMMENDATION_COMMAND + "' to view recommendation list");
         System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
         System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
+        System.out.println("Type '" + VIEW_CHECKOUT + "' to go to checkout");
     }
 
     // EFFECTS: displays menu when user is viewing their recommendation list
@@ -281,11 +290,10 @@ public class MadeForMeSkinCareApp {
     //MODIFIES: this
     //EFFECTS: tries to add product to shopping cart, and tells user if successful or not
     private void addToCart(int productNumber) {
+
         if (shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber))) {
-            System.out.println("\nThe product was added to your shopping cart!");
-            if (shoppingCart.checkForDiscount()) {
-                System.out.println("You received a" + DISCOUNT * 100 + "% on your purchase!");
-            }
+            System.out.println("\nThe product was added to your shopping cart! If you spend more than $"
+                    + AMOUNT_NEEDED_FOR_DISCOUNT + " then you receive a " + DISCOUNT * 100 + "% on your purchase!");
         } else {
             System.out.println("\nProduct cannot be added to cart as price limit is reached, but it has been added to "
                     + "your wish list.");
@@ -294,7 +302,7 @@ public class MadeForMeSkinCareApp {
     }
 
     //MODIFIES: this
-    //EFFECTS: asks user to add products to cart
+    //EFFECTS: asks user to remove products to cart by typing the product number into console
     private void removeFromCart() {
         int productNumber = input.nextInt();
         shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber));
@@ -302,7 +310,7 @@ public class MadeForMeSkinCareApp {
         displayProductLocationOptions();
     }
 
-    //EFFECTS: prints shopping cart
+    //EFFECTS: prints shopping cart; if empty, tells user that cart is empty
     private void viewShoppingCart() {
         if (shoppingCart.getProductsInCart().isEmpty()) {
             System.out.println("Shopping cart is currently empty.");
@@ -313,15 +321,14 @@ public class MadeForMeSkinCareApp {
             System.out.println((index + 1) + "-> " + p.getProductName());
         }
 
-        System.out.println("To remove a product, type 'remove' followed by the product number");
-        if (input.next().equals(REMOVE_COMMAND)) {
-            removeFromCart();
-        }
+        System.out.printf("Total: $%.2f%n", shoppingCart.getTotalPrice());
 
+        System.out.println("\nTo remove a product, type 'remove' followed by the product number");
         displayProductLocationOptions();
+
     }
 
-    //EFFECTS: prints wish list
+    //EFFECTS: prints wish list; if empty, tells user that the wish list is empty
     private void viewWishList() {
         if (shoppingCart.getWishList().isEmpty()) {
             System.out.println("Wish list is currently empty.");
@@ -332,5 +339,23 @@ public class MadeForMeSkinCareApp {
             System.out.println(p.getProductName());
         }
         displayProductLocationOptions();
+    }
+
+    //MODIFIES: this (if checkForDiscount is true)
+    //EFFECTS: prints check out menu
+    private void viewCheckout() {
+        System.out.println("\nCart:");
+        for (Product p : shoppingCart.getProductsInCart()) {
+            int index = shoppingCart.getProductsInCart().indexOf(p);
+            System.out.println((index + 1) + "-> " + p.getProductName());
+        }
+
+        System.out.printf("Cart total comes to $%.2f%n", shoppingCart.getTotalPrice());
+        if (shoppingCart.checkForDiscount()) {
+            System.out.println("You received a " + DISCOUNT * 100 + " on your purchase!");
+            System.out.printf("Your final total comes to $%.2f%n", shoppingCart.getTotalPrice());
+        }
+
+        System.out.println("\n Please press 'q' to end MadeForMe program.");
     }
 }

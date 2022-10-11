@@ -8,6 +8,8 @@ public class Moisturizer implements Product {
     private String productIngredients;
     private double price;
 
+    //EFFECTS: creates a cleanser with a unique name, description, ingredient list and price. Type is always set to
+    // "moisturizer".
     public Moisturizer(String name, String description, String ingredients, double price) {
         this.productName = name;
         this.productType = "Moisturizer";

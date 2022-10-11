@@ -8,7 +8,8 @@ public class Serum implements Product {
     private final String productIngredients;
     private final double price;
 
-    //REQUIRES:
+    //EFFECTS: creates a serum with a unique name, description, ingredient list and price. Type is always set
+    // to "serum"
     public Serum(String name, String description, String ingredients, double price) {
         this.productName = name;
         this.productType = "Serum";

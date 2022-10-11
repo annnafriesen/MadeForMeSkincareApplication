@@ -61,6 +61,7 @@ public class ShoppingCartTest {
 
         assertTrue(shoppingCart.addProductToCart(serum1));
         assertEquals(2, shoppingCart.getProductsInCart().size());
+        assertTrue(shoppingCart.checkForDiscount());
         assertEquals(43.35, shoppingCart.getTotalPrice());
     }
 
