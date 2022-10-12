@@ -2,10 +2,10 @@ package model;
 
 // Represents a shopper with a name, skin type, and their max price range for shopping.
 public class Shopper {
-    String customerName;
-    ConcernType concern;
-    SkinType skinType;
-    double maxPrice;
+    private String customerName;
+    private ConcernType concern;
+    private SkinType skinType;
+    private double maxPrice;
 
     //REQUIRES: Shopper name must be non-zero length and maxPrice must be > 0.
     //EFFECTS: creates a shopper object with an empty name, no declared skin or concern type, and maxPrice is 0.00.
