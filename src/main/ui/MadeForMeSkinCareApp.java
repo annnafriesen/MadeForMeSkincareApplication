@@ -8,6 +8,14 @@ import java.util.Scanner;
 import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
 import static model.ShoppingCart.DISCOUNT;
 
+//REFERENCE LIST: the following code mimics behaviour seen in TellerApp project provided in CPSC 210,
+// which can be found at https://github.students.cs.ubc.ca/CPSC210/TellerApp.git. I referenced the TellerApp when
+// designing my ui, especially when creating the init() and runMadeForMeApp(). As well, I tried to create a similar
+// flow to the TellerApp by having a general processCommand() method.
+// Additionally, I referenced the FitLifeGymKiosk Project provided in the CPSC 210 repository, which is found at
+//  https://github.students.cs.ubc.ca/CPSC210/LongFormProblemStarters/tree/main/FitLifeGymKiosk. I modelled my program
+// to have local variables for each command, as seen in FitLifeGymKiosk as well as the use of switch statements.
+
 // MadeForMe SkinCare Application
 public class MadeForMeSkinCareApp {
     private Shopper shopper;
@@ -26,9 +34,6 @@ public class MadeForMeSkinCareApp {
     public MadeForMeSkinCareApp() {
         runMadeForMeApp();
     }
-
-    //REFERENCE LIST: the following code mimics behaviour seen in TellerApp project provided in CPSC 210,
-    // which can be found at https://github.students.cs.ubc.ca/CPSC210/TellerApp.git.
 
     //MODIFIES: this
     //EFFECTS: processes users information
@@ -174,10 +179,13 @@ public class MadeForMeSkinCareApp {
         switch (command) {
             case ("o"):
                 shopper.setSkinType(SkinType.OILY);
+                break;
             case ("d"):
                 shopper.setSkinType(SkinType.DRY);
+                break;
             case ("c"):
                 shopper.setSkinType(SkinType.COMBINATION);
+                break;
         }
 
         System.out.println("Please select your max price range for the total cost of products:\n");
