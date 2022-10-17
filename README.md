@@ -28,3 +28,7 @@ excess time and money in this process so others can feel confident in their skin
 - As a user, I want to access the description and ingredients of a product recommended to me.
 - As a user, I want to remove a product from my shopping cart.
 - As a user, I want to have a wishlist of items I can't afford at the present time.
+- As a user, when I select the quit option from the application menu, I want to be presented with the option to save
+  my questionnaire answers, shopping cart and wishlist to file.
+- As a user, when I start the application, I want to be given the option to load my previous questionnaire answers, 
+shopping cart and wishlist from file.
