@@ -312,8 +312,9 @@ public class MadeForMeSkinCareApp {
     //MODIFIES: this
     //EFFECTS: asks user to remove products to cart by typing the product number into console
     private void removeFromCart() {
+        System.out.println("\nplease enter the product number of the product you would like to remove:");
         int productNumber = input.nextInt();
-        shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber));
+        shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber - 1));
         System.out.println("The product has been removed from your cart.");
         displayProductLocationOptions();
     }
@@ -321,12 +322,12 @@ public class MadeForMeSkinCareApp {
     //EFFECTS: prints shopping cart; if empty, tells user that cart is empty
     private void viewShoppingCart() {
         if (shoppingCart.getProductsInCart().isEmpty()) {
-            System.out.println("Shopping cart is currently empty.");
+            System.out.println("\nShopping cart is currently empty.");
         }
 
         for (Product p : shoppingCart.getProductsInCart()) {
             int index = shoppingCart.getProductsInCart().indexOf(p);
-            System.out.println((index + 1) + "-> " + p.getProductName());
+            System.out.println("#" + (index + 1) + " " + p.getProductName());
         }
 
         System.out.printf("Total: $%.2f%n", shoppingCart.getTotalPrice());
@@ -353,17 +354,21 @@ public class MadeForMeSkinCareApp {
     //EFFECTS: prints check out menu
     private void viewCheckout() {
         System.out.println("\nCart:");
-        for (Product p : shoppingCart.getProductsInCart()) {
-            int index = shoppingCart.getProductsInCart().indexOf(p);
-            System.out.println((index + 1) + "-> " + p.getProductName());
+        if (shoppingCart.getProductsInCart().isEmpty()) {
+            System.out.println("Nothing here!");
+        } else {
+            for (Product p : shoppingCart.getProductsInCart()) {
+                int index = shoppingCart.getProductsInCart().indexOf(p);
+                System.out.println("#" + (index + 1) + " " + p.getProductName());
+            }
         }
 
         System.out.printf("Cart total comes to $%.2f%n", shoppingCart.getTotalPrice());
         if (shoppingCart.checkForDiscount()) {
-            System.out.println("You received a " + DISCOUNT * 100 + " on your purchase!");
+            System.out.println("You received a " + DISCOUNT * 100 + "% on your purchase!");
             System.out.printf("Your final total comes to $%.2f%n", shoppingCart.getTotalPrice());
         }
 
-        System.out.println("\n Please press 'q' to end MadeForMe program.");
+        System.out.println("\nPlease press 'q' to end MadeForMe program.");
     }
 }
