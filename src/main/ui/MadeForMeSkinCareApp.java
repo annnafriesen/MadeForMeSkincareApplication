@@ -1,7 +1,11 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,6 +26,9 @@ public class MadeForMeSkinCareApp {
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+    private static final String JSON_STORE = "./data/shoppingCart.json";
 
     private static final String ADD_COMMAND = "add";
     private static final String REMOVE_COMMAND = "remove";
@@ -29,9 +36,14 @@ public class MadeForMeSkinCareApp {
     private static final String WISHLIST_COMMAND = "wl";
     private static final String VIEW_CART_COMMAND = "sc";
     private static final String VIEW_CHECKOUT = "done";
+    private static final String SAVE_COMMAND = "s";
+    private static final String LOAD_COMMAND = "l";
+
 
     //EFFECTS: runs the MadeForMe Skin Care app
-    public MadeForMeSkinCareApp() {
+    public MadeForMeSkinCareApp() throws FileNotFoundException {
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runMadeForMeApp();
     }
 
@@ -109,6 +121,12 @@ public class MadeForMeSkinCareApp {
             case VIEW_CHECKOUT:
                 viewCheckout();
                 break;
+            case SAVE_COMMAND:
+                saveShoppingCart();
+                break;
+            case LOAD_COMMAND:
+                loadShoppingCart();
+                break;
             default:
                 System.out.println("Selection not valid...");
                 break;
@@ -141,6 +159,8 @@ public class MadeForMeSkinCareApp {
         System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
         System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
         System.out.println("Type '" + VIEW_CHECKOUT + "' to go to checkout");
+        System.out.println("Type '" + SAVE_COMMAND + "'save shopping cart to file");
+        System.out.println("Type '" + LOAD_COMMAND + "' load shopping cart from file");
     }
 
     // EFFECTS: displays menu when user is viewing their recommendation list
@@ -149,6 +169,7 @@ public class MadeForMeSkinCareApp {
         System.out.println("Type '" + RECOMMENDATION_COMMAND + "' to view recommendation list");
         System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
         System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
+        System.out.println("Type '" + LOAD_COMMAND + "' load shopping cart from file");
     }
 
 
@@ -332,7 +353,7 @@ public class MadeForMeSkinCareApp {
 
         System.out.printf("Total: $%.2f%n", shoppingCart.getTotalPrice());
 
-        System.out.println("\nTo remove a product, type 'remove' followed by the product number");
+        System.out.println("\nTo remove a product, type 'remove'.");
         displayProductLocationOptions();
 
     }
@@ -370,5 +391,33 @@ public class MadeForMeSkinCareApp {
         }
 
         System.out.println("\nPlease press 'q' to end MadeForMe program.");
+    }
+
+    // EFFECTS: saves the workroom to file
+    private void saveShoppingCart() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(shoppingCart);
+            jsonWriter.close();
+            System.out.println("Saved " + shoppingCart.getShopper().getCustomerName() + "'s Shopping Cart to "
+                    + JSON_STORE + "\n");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+        displayProductLocationOptions();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
+    private void loadShoppingCart() {
+        String name = shoppingCart.getShopper().getCustomerName();
+        try {
+            shoppingCart = jsonReader.read();
+            System.out.println("Loaded " + name + "'s Shopping Cart from "
+                    + JSON_STORE + "\n");
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+        displayProductLocationOptions();
     }
 }

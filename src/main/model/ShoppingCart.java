@@ -1,11 +1,15 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writeable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents a virtual shopping cart for the specified shopper, and includes the total cost of cart, products
 // in the cart, and a wishlist.
-public class ShoppingCart {
+public class ShoppingCart implements Writeable {
     private List<Product> productsInCart;
     private List<Product> wishList;
     private List<Product> recommendationList;
@@ -91,6 +95,48 @@ public class ShoppingCart {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("shopping cart", cartToJson());
+        json.put("recommendation list", recommendationListToJson());
+        json.put("wish list", wishListToJson());
+        return json;
+    }
+
+    // EFFECTS: returns shopping cart list in shopping cart class a JSON array
+    private JSONArray cartToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Product p : getProductsInCart()) {
+            jsonArray.put(p.toJson());
+        }
+
+        return jsonArray;
+    }
+
+    // EFFECTS: returns recommendation list in this shopping cart as a JSON array
+    private JSONArray recommendationListToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Product p : getRecommendationList()) {
+            jsonArray.put(p.toJson());
+        }
+
+        return jsonArray;
+    }
+
+    // EFFECTS: returns wish list in this shopping cart as a JSON array
+    private JSONArray wishListToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Product p : getWishList()) {
+            jsonArray.put(p.toJson());
+        }
+
+        return jsonArray;
     }
 
 }

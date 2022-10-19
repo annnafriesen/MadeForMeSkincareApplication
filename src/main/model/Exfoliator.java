@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 //Represents an exfoliator with a name, type, description, ingredient list and price.
 public class Exfoliator implements Product {
     private final String productName;
@@ -41,6 +43,17 @@ public class Exfoliator implements Product {
     @Override
     public double getPrice() {
         return price;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", productName);
+        json.put("type", productType);
+        json.put("description", productDescription);
+        json.put("ingredients", productIngredients);
+        json.put("price", price);
+        return json;
     }
 }
 
