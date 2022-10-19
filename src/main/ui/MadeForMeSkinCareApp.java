@@ -38,6 +38,7 @@ public class MadeForMeSkinCareApp {
     private static final String VIEW_CHECKOUT = "done";
     private static final String SAVE_COMMAND = "s";
     private static final String LOAD_COMMAND = "l";
+    private static final String CONTINUE_COMMAND = "y";
 
 
     //EFFECTS: runs the MadeForMe Skin Care app
@@ -63,7 +64,7 @@ public class MadeForMeSkinCareApp {
             if (command.equals("q")) {
                 keepGoing = false;
             } else {
-                processCommandPart1(command);
+                processCommandHomeScreen(command);
             }
         }
         System.out.println("Thank you for using the MadeForMe SkinCare App to start your skin care journey. "
@@ -82,32 +83,60 @@ public class MadeForMeSkinCareApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes the first half of user commands
-    private void processCommandPart1(String command) {
+    // EFFECTS: processes the command at home screen
+    private void processCommandHomeScreen(String command) {
+        switch (command) {
+            case CONTINUE_COMMAND:
+                startQuestionnaire();
+                break;
+            case LOAD_COMMAND:
+                loadShoppingCart();
+                break;
+            default:
+                System.out.println("Try again. Please select a valid option.");
+                startHomeScreen();
+                break;
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes the command at skin type question
+    private void processCommandSkinType(String command) {
         switch (command) {
             case "o":
             case "c":
             case "d":
                 setSkinType(command);
                 break;
+            default:
+                System.out.println("Try again. Please select a valid option.");
+                startQuestionnaire();
+                break;
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes the command at concern type question
+    private void processCommandConcernType(String command) {
+        switch (command) {
             case "a":
             case "h":
             case "dr":
             case "r":
                 setConcernType(command);
                 break;
-            case REMOVE_COMMAND:
-                removeFromCart();
-                break;
             default:
-                processCommandPart2(command);
+                System.out.println("Try again. Please select a valid option.");
+                displayConcernTypeOptions();
+                String newCommand = input.next();
+                processCommandConcernType(newCommand);
                 break;
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: processes the second half of user commands
-    private void processCommandPart2(String command) {
+    // EFFECTS: processes the command at home screen
+    private void processCommandProductInfo(String command) {
         switch (command) {
             case RECOMMENDATION_COMMAND:
                 printRecommendationList();
@@ -118,9 +147,6 @@ public class MadeForMeSkinCareApp {
             case VIEW_CART_COMMAND:
                 viewShoppingCart();
                 break;
-            case VIEW_CHECKOUT:
-                viewCheckout();
-                break;
             case SAVE_COMMAND:
                 saveShoppingCart();
                 break;
@@ -128,14 +154,26 @@ public class MadeForMeSkinCareApp {
                 loadShoppingCart();
                 break;
             default:
-                System.out.println("Selection not valid...");
+                System.out.println("Try again. Please select a valid option.");
+                printRecommendationList();
                 break;
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the command at shopping cart
+    private void processCommandShoppingCart(String command) {
+        if (command == REMOVE_COMMAND) {
+            removeFromCart();
+        } else {
+            processCommandProductInfo(command);
+        }
+    }
+
+
     // EFFECTS: displays menu of skin type options to user
     private void displaySkinTypeOptions() {
-        System.out.println("\nSelect from:");
+        System.out.println("Select from:");
         System.out.println("\to -> Oily");
         System.out.println("\tc -> Combination");
         System.out.println("\td -> Dry");
@@ -144,7 +182,7 @@ public class MadeForMeSkinCareApp {
 
     // EFFECTS: displays menu of concern type options to user
     private void displayConcernTypeOptions() {
-        System.out.println("\nSelect from:");
+        System.out.println("Select from:");
         System.out.println("\ta -> Acne");
         System.out.println("\tdr -> Dryness");
         System.out.println("\th -> Hyperpigmentation");
@@ -181,17 +219,20 @@ public class MadeForMeSkinCareApp {
         shopper.setName(name);
 
         System.out.println("Hello, " + shopper.getCustomerName() + "! Answer the following questions to help us find "
-                + "the best products for you. Press any key to continue.");
-        startQuestionnaire();
+                + "the best products for you.");
+        System.out.println("To load a shopping cart from file, please enter '" + LOAD_COMMAND + "'.");
+        System.out.println("Otherwise, press '" + CONTINUE_COMMAND + "' to continue to the questionnaire!");
+        String command = input.next();
+        processCommandHomeScreen(command);
     }
 
     //MODIFIES: this
     //EFFECTS: asks the shopper the first questionnaire question (what is your skin type?)
     private void startQuestionnaire() {
-        String command = input.next();
-        command = command.toLowerCase();
         System.out.println("Please select your skin type:");
         displaySkinTypeOptions();
+        String command = input.next();
+        processCommandSkinType(command);
     }
 
     //MODIFIES: this
@@ -209,7 +250,7 @@ public class MadeForMeSkinCareApp {
                 break;
         }
 
-        System.out.println("Please select your max price range for the total cost of products:\n");
+        System.out.println("Please enter your max price range:\n");
         Double maxPrice = input.nextDouble();
         setMaxPrice(maxPrice);
     }
@@ -228,6 +269,8 @@ public class MadeForMeSkinCareApp {
 
         System.out.println("Please select the main skin concern you would like addressed:");
         displayConcernTypeOptions();
+        String command = input.next();
+        processCommandConcernType(command);
     }
 
     //MODIFIES: this
@@ -286,7 +329,7 @@ public class MadeForMeSkinCareApp {
     public void printRecommendationList() {
         for (Product p : shoppingCart.getRecommendationList()) {
             int index = shoppingCart.getRecommendationList().indexOf(p);
-            System.out.println((index + 1) + "." + p.getProductName());
+            System.out.println("#" + (index + 1) + " " + p.getProductName());
         }
         System.out.println("To read the description, get ingredient list, or add a product, please type the "
                 + "product number below.");
@@ -310,9 +353,7 @@ public class MadeForMeSkinCareApp {
             addToCart(recommendationNumber - 1);
 
         } else {
-            if (nextCommand.equals(RECOMMENDATION_COMMAND)) {
-                printRecommendationList();
-            }
+            processCommandProductInfo(nextCommand);
         }
     }
 
@@ -328,6 +369,8 @@ public class MadeForMeSkinCareApp {
                     + "your wish list.");
         }
         displayProductLocationOptions();
+        String command = input.next();
+        processCommandHomeScreen(command);
     }
 
     //MODIFIES: this
@@ -355,6 +398,8 @@ public class MadeForMeSkinCareApp {
 
         System.out.println("\nTo remove a product, type 'remove'.");
         displayProductLocationOptions();
+        String command = input.next();
+        processCommandShoppingCart(command);
 
     }
 
@@ -362,13 +407,15 @@ public class MadeForMeSkinCareApp {
     private void viewWishList() {
         if (shoppingCart.getWishList().isEmpty()) {
             System.out.println("Wish list is currently empty.");
-        }
-
-        System.out.println("\nYour wishlist contains:");
-        for (Product p : shoppingCart.getWishList()) {
-            System.out.println(p.getProductName());
+        } else {
+            System.out.println("\nYour wishlist contains:");
+            for (Product p : shoppingCart.getWishList()) {
+                System.out.println(p.getProductName());
+            }
         }
         displayProductLocationOptions();
+        String command = input.next();
+        processCommandShoppingCart(command);
     }
 
     //MODIFIES: this (if checkForDiscount is true)
@@ -397,7 +444,7 @@ public class MadeForMeSkinCareApp {
     private void saveShoppingCart() {
         try {
             jsonWriter.open();
-            jsonWriter.write(shoppingCart);
+            jsonWriter.writeShoppingCart(shoppingCart);
             jsonWriter.close();
             System.out.println("Saved " + shoppingCart.getShopper().getCustomerName() + "'s Shopping Cart to "
                     + JSON_STORE + "\n");
@@ -405,6 +452,8 @@ public class MadeForMeSkinCareApp {
             System.out.println("Unable to write to file: " + JSON_STORE);
         }
         displayProductLocationOptions();
+        String command = input.next();
+        processCommandShoppingCart(command);
     }
 
     // MODIFIES: this
@@ -419,5 +468,7 @@ public class MadeForMeSkinCareApp {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
         displayProductLocationOptions();
+        String command = input.next();
+        processCommandShoppingCart(command);
     }
 }

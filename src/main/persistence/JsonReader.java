@@ -12,7 +12,7 @@ import org.json.*;
 //REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git.
 
-// Represents a reader that reads workroom from JSON data stored in file
+// Represents a reader that reads shopping cart from JSON data stored in file
 public class JsonReader {
     private String source;
 
@@ -44,10 +44,34 @@ public class JsonReader {
     private ShoppingCart parseShoppingCart(JSONObject jsonObject) {
         Shopper s = new Shopper();
         ShoppingCart sc = new ShoppingCart(s);
+        addShopper(sc, jsonObject);
         addProductsToShoppingCart(sc, jsonObject);
         addProductsToWishList(sc, jsonObject);
         addProductsToRecommendationList(sc, jsonObject);
         return sc;
+    }
+
+    // MODIFIES: s
+    // EFFECTS: parses shoppers questionnaire answers from JSON object and adds them to shopper
+    private void addShopper(ShoppingCart sc, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("shopper");
+        for (Object json : jsonArray) {
+            JSONObject nextProduct = (JSONObject) json;
+            parseShopper(sc, nextProduct);
+        }
+    }
+
+    // MODIFIES: s
+    // EFFECTS: parses shoppers questionnaire answers from JSON object and adds them to shopper
+    private void parseShopper(ShoppingCart sc, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        SkinType skinType = SkinType.valueOf(jsonObject.getString("skin type"));
+        int maxPrice = jsonObject.getInt("max price");
+        ConcernType concern = ConcernType.valueOf(jsonObject.getString("concern type"));
+        sc.getShopper().setName(name);
+        sc.getShopper().setSkinType(skinType);
+        sc.getShopper().setMaxPrice(maxPrice);
+        sc.getShopper().setConcern(concern);
     }
 
     // MODIFIES: sc

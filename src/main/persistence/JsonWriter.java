@@ -1,5 +1,6 @@
 package persistence;
 
+import model.Shopper;
 import model.ShoppingCart;
 import org.json.JSONObject;
 
@@ -26,9 +27,10 @@ public class JsonWriter {
         writer = new PrintWriter(new File(destination));
     }
 
+
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
-    public void write(ShoppingCart sc) {
+    public void writeShoppingCart(ShoppingCart sc) {
         JSONObject json = sc.toJson();
         saveToFile(json.toString(TAB));
     }

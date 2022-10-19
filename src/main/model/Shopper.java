@@ -1,7 +1,11 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writeable;
+
 // Represents a shopper with a name, skin type, and their max price range for shopping.
-public class Shopper {
+public class Shopper implements Writeable {
     private String customerName;
     private ConcernType concern;
     private SkinType skinType;
@@ -64,5 +68,14 @@ public class Shopper {
         this.maxPrice = i;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", customerName);
+        json.put("skin type", skinType);
+        json.put("max price", maxPrice);
+        json.put("concern type", concern);
+        return json;
+    }
 }
 

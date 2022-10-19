@@ -103,6 +103,7 @@ public class ShoppingCart implements Writeable {
         json.put("shopping cart", cartToJson());
         json.put("recommendation list", recommendationListToJson());
         json.put("wish list", wishListToJson());
+        json.put("shopper", shopperToJson());
         return json;
     }
 
@@ -136,6 +137,14 @@ public class ShoppingCart implements Writeable {
             jsonArray.put(p.toJson());
         }
 
+        return jsonArray;
+    }
+
+    // EFFECTS: returns shopping cart list in shopping cart class a JSON array
+    private JSONArray shopperToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        jsonArray.put(getShopper().toJson());
         return jsonArray;
     }
 
