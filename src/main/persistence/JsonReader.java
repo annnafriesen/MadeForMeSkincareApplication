@@ -68,10 +68,10 @@ public class JsonReader {
         SkinType skinType = SkinType.valueOf(jsonObject.getString("skin type"));
         int maxPrice = jsonObject.getInt("max price");
         ConcernType concern = ConcernType.valueOf(jsonObject.getString("concern type"));
-        sc.getShopper().setName(name);
         sc.getShopper().setSkinType(skinType);
-        sc.getShopper().setMaxPrice(maxPrice);
         sc.getShopper().setConcern(concern);
+        sc.getShopper().setName(name);
+        sc.getShopper().setMaxPrice(maxPrice);
     }
 
     // MODIFIES: sc
@@ -113,7 +113,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses products from JSON object and adds them to shopping cart
+    // EFFECTS: parses products from JSON object and adds them to wish list
     private void addProductsToWishList(ShoppingCart sc, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("wish list");
         for (Object json : jsonArray) {
@@ -123,7 +123,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses product from JSON object and adds it to list in shopping cart
+    // EFFECTS: parses product from JSON object and adds it to list in wish list
     private void addProductToWishlist(ShoppingCart sc, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         String type = jsonObject.getString("type");
@@ -151,7 +151,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses products from JSON object and adds them to shopping cart
+    // EFFECTS: parses products from JSON object and adds them to list in recommendation list
     private void addProductsToRecommendationList(ShoppingCart sc, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("recommendation list");
         for (Object json : jsonArray) {
@@ -161,7 +161,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses product from JSON object and adds it to list in shopping cart
+    // EFFECTS: parses product from JSON object and adds it to list in recommendation list
     private void addProductToRecommendationList(ShoppingCart sc, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         String type = jsonObject.getString("type");

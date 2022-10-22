@@ -15,8 +15,8 @@ public class Shopper implements Writeable {
     //EFFECTS: creates a shopper object with an empty name, no declared skin or concern type, and maxPrice is 0.00.
     public Shopper() {
         this.customerName = "";
-        this.concern = null;
-        this.skinType = null;
+        this.concern = ConcernType.DEFAULT;
+        this.skinType = SkinType.DEFAULT;
         this.maxPrice = 0.0;
     }
 

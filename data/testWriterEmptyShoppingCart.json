@@ -1,0 +1,11 @@
+{
+    "recommendation list": [],
+    "wish list": [],
+    "shopper": [{
+        "skin type": "DEFAULT",
+        "max price": 0,
+        "concern type": "DEFAULT",
+        "name": ""
+    }],
+    "shopping cart": []
+}

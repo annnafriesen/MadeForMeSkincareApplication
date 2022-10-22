@@ -136,7 +136,7 @@ public class MadeForMeSkinCareApp {
 
     // MODIFIES: this
     // EFFECTS: processes the command at home screen
-    private void processCommandProductInfo(String command) {
+    private void processCommandProductInfoPart1(String command) {
         switch (command) {
             case RECOMMENDATION_COMMAND:
                 printRecommendationList();
@@ -147,6 +147,19 @@ public class MadeForMeSkinCareApp {
             case VIEW_CART_COMMAND:
                 viewShoppingCart();
                 break;
+            case VIEW_CHECKOUT:
+                saveShoppingCart();
+                break;
+            default:
+                processCommandProductInfoPart2(command);
+                break;
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes the command at home screen
+    private void processCommandProductInfoPart2(String command) {
+        switch (command) {
             case SAVE_COMMAND:
                 saveShoppingCart();
                 break;
@@ -166,7 +179,7 @@ public class MadeForMeSkinCareApp {
         if (command == REMOVE_COMMAND) {
             removeFromCart();
         } else {
-            processCommandProductInfo(command);
+            processCommandProductInfoPart1(command);
         }
     }
 
@@ -353,7 +366,7 @@ public class MadeForMeSkinCareApp {
             addToCart(recommendationNumber - 1);
 
         } else {
-            processCommandProductInfo(nextCommand);
+            processCommandProductInfoPart1(nextCommand);
         }
     }
 
@@ -370,7 +383,7 @@ public class MadeForMeSkinCareApp {
         }
         displayProductLocationOptions();
         String command = input.next();
-        processCommandHomeScreen(command);
+        processCommandProductInfoPart1(command);
     }
 
     //MODIFIES: this
