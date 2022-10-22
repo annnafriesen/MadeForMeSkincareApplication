@@ -53,6 +53,11 @@ public class JsonWriterTest extends JsonTest{
             Shopper s = new Shopper();
             ShoppingCart sc = new ShoppingCart(s);
 
+            sc.getShopper().setName("Anna");
+            sc.getShopper().setConcern(ConcernType.REDNESS);
+            sc.getShopper().setSkinType(SkinType.COMBINATION);
+            sc.getShopper().setMaxPrice(100);
+
             sc.addProductToRecommendationList(new Serum("Azelaic Acid Suspension 10%", "A "
                     + "formula for uneven and blemish-prone skin.", "Azelaic Acid", 27.20));
             sc.addProductToRecommendationList(new Exfoliator("Mandelic Acid 10%", "A gentler exfoliant, "
@@ -77,10 +82,17 @@ public class JsonWriterTest extends JsonTest{
                     + "cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
                     21.70)));
 
-            sc.getShopper().setName("Anna");
-            sc.getShopper().setConcern(ConcernType.REDNESS);
-            sc.getShopper().setSkinType(SkinType.COMBINATION);
-            sc.getShopper().setMaxPrice(100);
+            sc.addProductToCart(new Serum("Azelaic Acid Suspension 10%", "A "
+                    + "formula for uneven and blemish-prone skin.", "Azelaic Acid", 27.20));
+            sc.addProductToCart(new Exfoliator("Mandelic Acid 10%", "A gentler exfoliant, "
+                    + "in serum form.", "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia "
+                    + "Lanceolata Fruit/Leaf Extract", 8.80));
+            sc.addProductToCart(new Moisturizer("Natural Moisturizer", "Keeps the outer layer "
+                    + "of your skin protected and well-hydrated, without feeling greasy.", "Sodium Hyaluronate, "
+                    + "Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals", 11.50));
+            sc.addProductToCart(new Cleanser("Squalance Cleanser", "A moisturizing all-in-one "
+                    + "cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
+                    21.70));
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralShoppingCart.json");
             writer.open();
             writer.writeShoppingCart(sc);
@@ -91,9 +103,22 @@ public class JsonWriterTest extends JsonTest{
             List<Product> shoppingCart = sc.getProductsInCart();
             List<Product> wishList = sc.getWishList();
             List<Product> recommendationList = sc.getRecommendationList();
-            assertEquals(0, shoppingCart.size());
+            assertEquals(4, shoppingCart.size());
             assertEquals(4, recommendationList.size());
             assertEquals(4, wishList.size());
+
+            checkProduct("Azelaic Acid Suspension 10%", "A formula for uneven and blemish-prone skin.",
+                    "Azelaic Acid", 27.2, "Serum", shoppingCart.get(0));
+            checkProduct("Mandelic Acid 10%", "A gentler exfoliant, in serum form.",
+                    "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia Lanceolata "
+                            + "Fruit/Leaf Extract", 8.8, "Exfoliator", shoppingCart.get(1));
+            checkProduct("Natural Moisturizer", "Keeps the outer layer "
+                            + "of your skin protected and well-hydrated, without feeling greasy.",
+                    "Sodium Hyaluronate, Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals",
+                    11.50, "Moisturizer", shoppingCart.get(2));
+            checkProduct("Squalance Cleanser", "A moisturizing all-in-one "
+                            + "cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
+                    21.70, "Cleanser", shoppingCart.get(3));
 
             checkProduct("Azelaic Acid Suspension 10%", "A formula for uneven and blemish-prone skin.",
                     "Azelaic Acid", 27.2, "Serum", wishList.get(0));

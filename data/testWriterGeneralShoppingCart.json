@@ -65,5 +65,34 @@
         "concern type": "REDNESS",
         "name": "Anna"
     }],
-    "shopping cart": []
+    "shopping cart": [
+        {
+            "price": 27.2,
+            "name": "Azelaic Acid Suspension 10%",
+            "description": "A formula for uneven and blemish-prone skin.",
+            "ingredients": "Azelaic Acid",
+            "type": "Serum"
+        },
+        {
+            "price": 8.8,
+            "name": "Mandelic Acid 10%",
+            "description": "A gentler exfoliant, in serum form.",
+            "ingredients": "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia Lanceolata Fruit/Leaf Extract",
+            "type": "Exfoliator"
+        },
+        {
+            "price": 11.5,
+            "name": "Natural Moisturizer",
+            "description": "Keeps the outer layer of your skin protected and well-hydrated, without feeling greasy.",
+            "ingredients": "Sodium Hyaluronate, Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals",
+            "type": "Moisturizer"
+        },
+        {
+            "price": 21.7,
+            "name": "Squalance Cleanser",
+            "description": "A moisturizing all-in-one cleanser",
+            "ingredients": "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
+            "type": "Cleanser"
+        }
+    ]
 }
