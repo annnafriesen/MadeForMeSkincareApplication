@@ -94,7 +94,7 @@ public class MadeForMeSkinCareApp {
                 break;
             default:
                 System.out.println("Try again. Please select a valid option.");
-                startHomeScreen();
+                runMadeForMeApp();
                 break;
         }
     }
@@ -138,6 +138,9 @@ public class MadeForMeSkinCareApp {
     // EFFECTS: processes the command at home screen
     private void processCommandProductInfoPart1(String command) {
         switch (command) {
+            case REMOVE_COMMAND:
+                removeFromCart();
+                break;
             case RECOMMENDATION_COMMAND:
                 printRecommendationList();
                 break;
@@ -148,7 +151,7 @@ public class MadeForMeSkinCareApp {
                 viewShoppingCart();
                 break;
             case VIEW_CHECKOUT:
-                saveShoppingCart();
+                viewCheckout();
                 break;
             default:
                 processCommandProductInfoPart2(command);
@@ -167,7 +170,7 @@ public class MadeForMeSkinCareApp {
                 loadShoppingCart();
                 break;
             default:
-                System.out.println("Try again. Please select a valid option.");
+                System.out.println("Not a valid key. You have been returned to your recommendation list!");
                 printRecommendationList();
                 break;
         }
@@ -176,11 +179,7 @@ public class MadeForMeSkinCareApp {
     // MODIFIES: this
     // EFFECTS: processes the command at shopping cart
     private void processCommandShoppingCart(String command) {
-        if (command == REMOVE_COMMAND) {
-            removeFromCart();
-        } else {
-            processCommandProductInfoPart1(command);
-        }
+        processCommandProductInfoPart1(command);
     }
 
 
@@ -210,7 +209,7 @@ public class MadeForMeSkinCareApp {
         System.out.println("Type '" + WISHLIST_COMMAND + "' to view wishlist");
         System.out.println("Type '" + VIEW_CART_COMMAND + "' to view your shopping cart");
         System.out.println("Type '" + VIEW_CHECKOUT + "' to go to checkout");
-        System.out.println("Type '" + SAVE_COMMAND + "'save shopping cart to file");
+        System.out.println("Type '" + SAVE_COMMAND + "' save shopping cart to file");
         System.out.println("Type '" + LOAD_COMMAND + "' load shopping cart from file");
     }
 
@@ -231,6 +230,12 @@ public class MadeForMeSkinCareApp {
         String name = input.nextLine();
         shopper.setName(name);
 
+        homeScreenOptions();
+    }
+
+    //MODIFIES: this
+    //EFFECTS: displays MadeForMe SkinCare brand message and asks for users name
+    private void homeScreenOptions() {
         System.out.println("Hello, " + shopper.getCustomerName() + "! Answer the following questions to help us find "
                 + "the best products for you.");
         System.out.println("To load a shopping cart from file, please enter '" + LOAD_COMMAND + "'.");
@@ -394,6 +399,8 @@ public class MadeForMeSkinCareApp {
         shoppingCart.removeProductFromCart(shoppingCart.getProductsInCart().get(productNumber - 1));
         System.out.println("The product has been removed from your cart.");
         displayProductLocationOptions();
+        String command = input.next();
+        processCommandProductInfoPart1(command);
     }
 
     //EFFECTS: prints shopping cart; if empty, tells user that cart is empty
@@ -409,7 +416,7 @@ public class MadeForMeSkinCareApp {
 
         System.out.printf("Total: $%.2f%n", shoppingCart.getTotalPrice());
 
-        System.out.println("\nTo remove a product, type 'remove'.");
+        System.out.println("\nTo remove a product, type '" + REMOVE_COMMAND + "'.");
         displayProductLocationOptions();
         String command = input.next();
         processCommandShoppingCart(command);
@@ -466,7 +473,7 @@ public class MadeForMeSkinCareApp {
         }
         displayProductLocationOptions();
         String command = input.next();
-        processCommandShoppingCart(command);
+        processCommandProductInfoPart1(command);
     }
 
     // MODIFIES: this

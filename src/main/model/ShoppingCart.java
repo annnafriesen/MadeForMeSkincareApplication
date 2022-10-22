@@ -107,7 +107,7 @@ public class ShoppingCart implements Writeable {
         return json;
     }
 
-    // EFFECTS: returns shopping cart list in shopping cart class a JSON array
+    // EFFECTS: returns shopping cart list in this shopping cart as a JSON array
     private JSONArray cartToJson() {
         JSONArray jsonArray = new JSONArray();
 
@@ -139,7 +139,7 @@ public class ShoppingCart implements Writeable {
         return jsonArray;
     }
 
-    // EFFECTS: returns shopper details in shopping cart as a JSON array
+    // EFFECTS: returns shopper details in this shopping cart as a JSON array
     private JSONArray shopperToJson() {
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(getShopper().toJson());

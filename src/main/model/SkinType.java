@@ -1,6 +1,6 @@
 package model;
 
-// Represents the possible skin types a user may have.
+// Represents the possible skin types a user may have. Default represents no user selection.
 public enum SkinType {
     OILY, COMBINATION, DRY, DEFAULT
 }

@@ -11,6 +11,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+// be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. My project uses this demo's
+// strategy of testing a non-existent file, an empty file and a "normal" file.
+
 public class JsonReaderTest extends JsonTest {
 
     @Test

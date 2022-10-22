@@ -7,6 +7,10 @@ import model.SkinType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+// be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. Similar to demo's check function,
+// except specific to my project.
+
 public class JsonTest {
     //EFFECTS: tests each product field for a product
     protected void checkProduct(String name, String description, String ingredients, double maxPrice,

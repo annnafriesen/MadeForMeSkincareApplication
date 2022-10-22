@@ -1,11 +1,10 @@
 package model;
 
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
 import java.util.List;
 
 // Instantiates the Ordinary Products that are for sale; includes moisturizers, exfoliants, serums, and cleansers.
-// Each product has a name, description, ingredient list and price attached to it.
+// Each product has a name, description, ingredient list and price.
 public class TheOrdinaryProducts {
     //MOISTURIZERS
     Product naturalMoisturizer = new Moisturizer("Natural Moisturizer", "Keeps the outer layer "

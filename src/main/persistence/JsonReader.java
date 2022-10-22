@@ -10,7 +10,9 @@ import model.*;
 import org.json.*;
 
 //REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
-// be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git.
+// be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. My project has similar read() and
+// readFile() functions, as well as a similar structure of a parsing method followed by an json addition method for
+// each array in the JsonObject.
 
 // Represents a reader that reads shopping cart from JSON data stored in file
 public class JsonReader {

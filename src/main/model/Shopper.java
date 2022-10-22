@@ -12,7 +12,8 @@ public class Shopper implements Writeable {
     private double maxPrice;
 
     //REQUIRES: Shopper name must be non-zero length and maxPrice must be > 0.
-    //EFFECTS: creates a shopper object with an empty name, no declared skin or concern type, and maxPrice is 0.00.
+    //EFFECTS: creates a shopper object with an empty name, an empty default-type skin and concern type, and
+    // maxPrice is 0.00.
     public Shopper() {
         this.customerName = "";
         this.concern = ConcernType.DEFAULT;

@@ -8,6 +8,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+// be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. My project uses this demo's
+// strategy of testing a non-existent file, an empty file and a "normal" file.
+
 public class JsonWriterTest extends JsonTest{
 
     @Test
@@ -60,14 +64,15 @@ public class JsonWriterTest extends JsonTest{
 
             sc.addProductToRecommendationList(new Serum("Azelaic Acid Suspension 10%", "A "
                     + "formula for uneven and blemish-prone skin.", "Azelaic Acid", 27.20));
-            sc.addProductToRecommendationList(new Exfoliator("Mandelic Acid 10%", "A gentler exfoliant, "
-                    + "in serum form.", "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia "
+            sc.addProductToRecommendationList(new Exfoliator("Mandelic Acid 10%", "A gentler " +
+                    "exfoliant in serum form.", "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia "
                     + "Lanceolata Fruit/Leaf Extract", 8.80));
-            sc.addProductToRecommendationList(new Moisturizer("Natural Moisturizer", "Keeps the outer layer "
-                    + "of your skin protected and well-hydrated, without feeling greasy.", "Sodium Hyaluronate, "
-                    + "Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals", 11.50));
-            sc.addProductToRecommendationList(new Cleanser("Squalance Cleanser", "A moisturizing all-in-one "
-                    + "cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
+            sc.addProductToRecommendationList(new Moisturizer("Natural Moisturizer", "Keeps the outer "
+                    +"layer of your skin protected and well-hydrated, without feeling greasy.",
+                    "Sodium Hyaluronate, Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals",
+                    11.50));
+            sc.addProductToRecommendationList(new Cleanser("Squalance Cleanser", "A moisturizing "
+                    +"all-in-one cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
                     21.70));
 
             sc.getWishList().add((new Serum("Azelaic Acid Suspension 10%", "A "
@@ -76,8 +81,9 @@ public class JsonWriterTest extends JsonTest{
                     + "in serum form.", "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia "
                     + "Lanceolata Fruit/Leaf Extract", 8.80)));
             sc.getWishList().add((new Moisturizer("Natural Moisturizer", "Keeps the outer layer "
-                    + "of your skin protected and well-hydrated, without feeling greasy.", "Sodium Hyaluronate, "
-                    + "Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals", 11.50)));
+                    + "of your skin protected and well-hydrated, without feeling greasy.",
+                    "Sodium Hyaluronate, Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals",
+                    11.50)));
             sc.getWishList().add((new Cleanser("Squalance Cleanser", "A moisturizing all-in-one "
                     + "cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
                     21.70)));
@@ -88,8 +94,9 @@ public class JsonWriterTest extends JsonTest{
                     + "in serum form.", "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia "
                     + "Lanceolata Fruit/Leaf Extract", 8.80));
             sc.addProductToCart(new Moisturizer("Natural Moisturizer", "Keeps the outer layer "
-                    + "of your skin protected and well-hydrated, without feeling greasy.", "Sodium Hyaluronate, "
-                    + "Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals", 11.50));
+                    + "of your skin protected and well-hydrated, without feeling greasy.",
+                    "Sodium Hyaluronate, Arginine, Sodium PCA, PCA, Lactates, Lactic Acid, and Minerals",
+                    11.50));
             sc.addProductToCart(new Cleanser("Squalance Cleanser", "A moisturizing all-in-one "
                     + "cleanser", "Squalane, Sucrose Stearate, Ethyl Macadamiate, Sucrose Laurate",
                     21.70));
@@ -135,7 +142,7 @@ public class JsonWriterTest extends JsonTest{
 
             checkProduct("Azelaic Acid Suspension 10%", "A formula for uneven and blemish-prone skin.",
                     "Azelaic Acid", 27.2, "Serum", recommendationList.get(0));
-            checkProduct("Mandelic Acid 10%", "A gentler exfoliant, in serum form.",
+            checkProduct("Mandelic Acid 10%", "A gentler exfoliant in serum form.",
                     "Mandelic Acid, Sodium Hyaluronate Crosspolymer, Tasmannia Lanceolata "
                             + "Fruit/Leaf Extract", 8.8, "Exfoliator", recommendationList.get(1));
             checkProduct("Natural Moisturizer", "Keeps the outer layer "
