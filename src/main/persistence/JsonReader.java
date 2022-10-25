@@ -14,7 +14,7 @@ import org.json.*;
 // readFile() functions, as well as a similar structure of a parsing method followed by an json addition method for
 // each array in the JsonObject.
 
-// Represents a reader that reads shopping cart from JSON data stored in file
+// Represents a reader that reads a shopping cart from JSON data stored in file
 public class JsonReader {
     private String source;
 
@@ -87,7 +87,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses product from JSON object and adds it to list in shopping cart
+    // EFFECTS: parses a singular product from JSON object and adds it to list in shopping cart
     private void addProductToShoppingCart(ShoppingCart sc, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         String type = jsonObject.getString("type");
@@ -125,7 +125,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses product from JSON object and adds it to list in wish list
+    // EFFECTS: parses a singular product from JSON object and adds it to list in wish list
     private void addProductToWishlist(ShoppingCart sc, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         String type = jsonObject.getString("type");
@@ -163,7 +163,7 @@ public class JsonReader {
     }
 
     // MODIFIES: sc
-    // EFFECTS: parses product from JSON object and adds it to list in recommendation list
+    // EFFECTS: parses a singular product from JSON object and adds it to list in recommendation list
     private void addProductToRecommendationList(ShoppingCart sc, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         String type = jsonObject.getString("type");

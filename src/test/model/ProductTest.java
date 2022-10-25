@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+//Tests methods that implement the Product interface
 public class ProductTest {
     Product moisturizer1;
     Product serum1;

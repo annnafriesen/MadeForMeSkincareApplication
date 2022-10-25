@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//Tests methods in the Shopper class
 public class ShopperTest {
     private Shopper shopper;
 

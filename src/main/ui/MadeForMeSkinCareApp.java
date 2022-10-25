@@ -20,7 +20,7 @@ import static model.ShoppingCart.DISCOUNT;
 //  https://github.students.cs.ubc.ca/CPSC210/LongFormProblemStarters/tree/main/FitLifeGymKiosk. I modelled my program
 // to have local variables for each command, as seen in FitLifeGymKiosk as well as the use of switch statements.
 
-// MadeForMe SkinCare Application
+//represents the MadeForMe SkinCare Application
 public class MadeForMeSkinCareApp {
     private Shopper shopper;
     private ShoppingCart shoppingCart;

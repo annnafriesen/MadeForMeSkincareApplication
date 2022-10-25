@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. My project uses this demo's
 // strategy of testing a non-existent file, an empty file and a "normal" file.
 
+//Tests for methods in the JsonWriter class
 public class JsonWriterTest extends JsonTest{
 
     @Test

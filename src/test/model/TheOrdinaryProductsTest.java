@@ -8,6 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//Tests methods in TheOrdinaryProducts class
 public class TheOrdinaryProductsTest {
     TheOrdinaryProducts productSelection;
 

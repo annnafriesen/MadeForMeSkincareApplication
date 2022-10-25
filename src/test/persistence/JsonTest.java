@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. Similar to demo's check function,
 // except specific to my project.
 
+//Tests the transcription of products and shopper details into JsonObjects
 public class JsonTest {
     //EFFECTS: tests each product field for a product
     protected void checkProduct(String name, String description, String ingredients, double maxPrice,

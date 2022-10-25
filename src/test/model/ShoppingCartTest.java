@@ -7,6 +7,7 @@ import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
 import static model.ShoppingCart.DISCOUNT;
 import static org.junit.jupiter.api.Assertions.*;
 
+//Tests methods in the ShoppingCart class
 public class ShoppingCartTest {
     private ShoppingCart shoppingCart;
     private Shopper shopper;
