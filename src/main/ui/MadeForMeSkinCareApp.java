@@ -268,7 +268,8 @@ public class MadeForMeSkinCareApp {
                 break;
         }
 
-        System.out.println("Please enter your max price range:\n");
+        System.out.println("Please enter your max price range below. If you spend more than $"
+                + AMOUNT_NEEDED_FOR_DISCOUNT + " then you receive a " + DISCOUNT * 100 + "% on your purchase!");
         Double maxPrice = input.nextDouble();
         setMaxPrice(maxPrice);
     }
@@ -380,8 +381,7 @@ public class MadeForMeSkinCareApp {
     private void addToCart(int productNumber) {
 
         if (shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber))) {
-            System.out.println("\nThe product was added to your shopping cart! If you spend more than $"
-                    + AMOUNT_NEEDED_FOR_DISCOUNT + " then you receive a " + DISCOUNT * 100 + "% on your purchase!");
+            System.out.println("\nThe product was added to your shopping cart!");
         } else {
             System.out.println("\nProduct cannot be added to cart as price limit is reached, but it has been added to "
                     + "your wish list.");
