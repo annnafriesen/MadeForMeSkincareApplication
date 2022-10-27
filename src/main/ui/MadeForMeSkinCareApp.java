@@ -32,7 +32,7 @@ public class MadeForMeSkinCareApp {
 
     private static final String ADD_COMMAND = "add";
     private static final String REMOVE_COMMAND = "remove";
-    private static final String RECOMMENDATION_COMMAND = "back";
+    private static final String RECOMMENDATION_COMMAND = "r";
     private static final String WISHLIST_COMMAND = "wl";
     private static final String VIEW_CART_COMMAND = "sc";
     private static final String VIEW_CHECKOUT = "done";
@@ -416,7 +416,9 @@ public class MadeForMeSkinCareApp {
 
         System.out.printf("Total: $%.2f%n", shoppingCart.getTotalPrice());
 
-        System.out.println("\nTo remove a product, type '" + REMOVE_COMMAND + "'.");
+        if (!shoppingCart.getProductsInCart().isEmpty()) {
+            System.out.println("\nTo remove a product, type '" + REMOVE_COMMAND + "'.");
+        }
         displayProductLocationOptions();
         String command = input.next();
         processCommandShoppingCart(command);
