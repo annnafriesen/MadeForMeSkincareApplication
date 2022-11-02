@@ -16,7 +16,7 @@ import java.util.List;
 
 //RFERENCE: alarm system
 public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
-    public static final int WIDTH = 800;
+    public static final int WIDTH = 750;
     public static final int HEIGHT = 600;
     private JComboBox<String> skinCombo;
     private JComboBox<String> concernCombo;
@@ -26,6 +26,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private JTextField shopperName;
     private JList recommendationList;
     private DefaultListModel recommendationListModel;
+    private JScrollPane listScrollPane;
+    ShoppingCartUI shoppingCartPanel;
     private Shopper shopper;
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
@@ -41,6 +43,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private static final String SKIN_TYPE_COMBO = "combination";
     private static final String SKIN_TYPE_DRY = "dry";
 
+    private static final String DEFAULT_TYPE = "";
     private static final String CONCERN_TYPE_ACNE = "acne";
     private static final String CONCERN_TYPE_DRYNESS = "dryness";
     private static final String CONCERN_TYPE_HYPERPIGMENTATION = "hyperpigmentation";
@@ -105,13 +108,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private void addRecommendationPanel() {
         JPanel recommendationPanel = new JPanel();
         recommendationListModel = new DefaultListModel();
-        if (shoppingCart.getRecommendationList().isEmpty()) {
-            recommendationListModel.addElement("Recommendation List is empty!");
-        } else {
-            for (Product p : shoppingCart.getRecommendationList()) {
-                recommendationListModel.addElement(p.getProductName());
-            }
-        }
+        recommendationListModel.addElement("Recommendation List is empty!");
 
         recommendationList = new JList(recommendationListModel);
         recommendationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -119,24 +116,26 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         recommendationList.addListSelectionListener(this);
         recommendationList.setLayoutOrientation(JList.VERTICAL);
         recommendationList.setVisibleRowCount(10);
-        JScrollPane listScrollPane = new JScrollPane(recommendationList);
+        listScrollPane = new JScrollPane(recommendationList);
 
-        addRecommendationListButtons(recommendationPanel);
-
-        startFrame.add(recommendationPanel, BorderLayout.EAST);
+        startFrame.add(addRecommendationListButtons(recommendationPanel), BorderLayout.EAST);
         startFrame.add(listScrollPane, BorderLayout.PAGE_END);
     }
 
+    //EFFECTS: adds the "add" and "view" buttons to the recommendation panel, and returns the updated recommendation
+    // panel to be added to the frame
     public JPanel addRecommendationListButtons(JPanel recommendationPanel) {
         //ADD BUTTON
         addButton = new JButton(addString);
         addButton.setActionCommand(addString);
         addButton.addActionListener(new AddProduct());
+        addButton.setEnabled(false);
 
         //VIEW BUTTON
         viewButton = new JButton(viewString);
         viewButton.setActionCommand(viewString);
         viewButton.addActionListener(new ViewProduct());
+        viewButton.setEnabled(false);
 
         recommendationPanel.add(addButton);
         recommendationPanel.add(Box.createHorizontalStrut(5));
@@ -148,8 +147,9 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
 
     private void addShoppingCartPanel() {
-        ShoppingCartPanel scUI = new ShoppingCartPanel(shoppingCart, this);
-        desktop.add(scUI);
+        shoppingCartPanel = new ShoppingCartUI(shoppingCart, this);
+        shoppingCartFrame.add(shoppingCartPanel);
+        desktop.add(shoppingCartPanel);
     }
 
     @Override
@@ -175,10 +175,10 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
             //GET INDEX DETAILS
             //TODO: add an icon
             JOptionPane.showMessageDialog(null,
-                    "\n" + shoppingCart.getRecommendationList().get(index).getProductName()
-                            + ":" + shoppingCart.getRecommendationList().get(index).getDescription()
-                            + "Ingredient Lists: " + shoppingCart.getRecommendationList().get(index).getIngredients()
-                            + "Priced at $%.2f%n" + shoppingCart.getRecommendationList().get(index).getPrice(),
+                    shoppingCart.getRecommendationList().get(index).getProductName()
+                            + ": \n" + shoppingCart.getRecommendationList().get(index).getDescription()
+                            + "\nIngredient Lists: " + shoppingCart.getRecommendationList().get(index).getIngredients()
+                            + "\nPriced at $" + shoppingCart.getRecommendationList().get(index).getPrice() + "0",
                     "Product Information",
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -194,30 +194,30 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
+    //Creates action for the add button
     class AddProduct implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
             int index = recommendationList.getSelectedIndex();
-            recommendationListModel.remove(index);
+
+            int listIndex = shoppingCart.getRecommendationList().size() - 1;
+            Product product = shoppingCart.getRecommendationList().get(listIndex - index);
+            shoppingCart.addProductToCart(product);
+            shoppingCartPanel.addProductToList(product, index);
 
             int size = recommendationListModel.getSize();
 
             if (size == 0) { //Nobody's left, disable firing.
                 addButton.setEnabled(false);
-
-            } else { //Select an index.
-                if (index == recommendationListModel.getSize()) {
-                    //removed item in last position
-                    index--;
-                }
-
-                recommendationList.setSelectedIndex(index);
-                recommendationList.ensureIndexIsVisible(index);
             }
+            recommendationList.setSelectedIndex(index);
+            recommendationList.ensureIndexIsVisible(index);
+            //else { //Select an index.
+            //    if (index == recommendationListModel.getSize()) {
+            //        //removed item in last position
+            //        index--;
         }
     }
+
 
     private class SubmitAnswersAction extends AbstractAction {
 
@@ -230,19 +230,62 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
             String selectedSkinType = (String) skinCombo.getSelectedItem();
             String selectedConcernType = (String) concernCombo.getSelectedItem();
             try {
-                //TODO: how to do this
                 saveSkinTypeAnswers(selectedSkinType);
                 saveConcernAnswers(selectedConcernType);
                 saveUsersName(shopperName.getText());
+                createRecommendationList();
+                recommendationListModel.removeAllElements();
+                //TODO: is this the issue?
+                for (Product p : shoppingCart.getRecommendationList()) {
+                    int index = 0;
+                    recommendationListModel.insertElementAt(p.getProductName(), index);
+                    recommendationList.setSelectedIndex(index);
+                    recommendationList.ensureIndexIsVisible(index);
+                    index++;
+                }
+                makeButtonsVisible();
             } catch (LoginException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
+
+        private void makeButtonsVisible() {
+            addButton.setEnabled(true);
+            viewButton.setEnabled(true);
+        }
+    }
+
+    //EFFECTS: shows recommendations for the Ordinary Products based on users answers, and adds products starting
+    // from most recommended to least recommended (always recommends moisturizer and cleanser)
+    public void createRecommendationList() {
+        ConcernType concern = shopper.getConcern();
+        if (concern.equals(ConcernType.ACNE)) {
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(6));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(1));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(4));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
+        } else if (concern.equals(ConcernType.DRYNESS)) {
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(5));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
+        } else if (concern.equals(ConcernType.HYPERPIGMENTATION)) {
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(2));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(6));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
+        } else if (concern.equals(ConcernType.REDNESS)) {
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(7));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(3));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
+            shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
+        }
+
     }
 
     //EFFECTS: sets the users selected skin type option as shopper's skin type
-    private void saveSkinTypeAnswers(String selected) throws LoginException {
+    public void saveSkinTypeAnswers(String selected) throws LoginException {
         switch (selected) {
             case SKIN_TYPE_DRY:
                 shoppingCart.getShopper().setSkinType(SkinType.DRY);
@@ -259,7 +302,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     }
 
     //EFFECTS: sets the users selected concern type option as shopper's concern type
-    private void saveConcernAnswers(String selected) throws LoginException {
+    //TODO private or public?
+    public void saveConcernAnswers(String selected) throws LoginException {
         switch (selected) {
             case CONCERN_TYPE_ACNE:
                 shoppingCart.getShopper().setConcern(ConcernType.ACNE);
@@ -288,6 +332,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //EFFECTS: creates a combo box with skin type options: oily, dry, and combo.
     private JComboBox<String> createSkinCombo() {
         skinCombo = new JComboBox<String>();
+        skinCombo.addItem(DEFAULT_TYPE);
         skinCombo.addItem(SKIN_TYPE_OILY);
         skinCombo.addItem(SKIN_TYPE_DRY);
         skinCombo.addItem(SKIN_TYPE_COMBO);
@@ -297,6 +342,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //EFFECTS: creates a combo box with concern options: acne, hyperpigmentation, dryness and redness.
     private JComboBox<String> createConcernCombo() {
         concernCombo = new JComboBox<String>();
+        concernCombo.addItem(DEFAULT_TYPE);
         concernCombo.addItem(CONCERN_TYPE_ACNE);
         concernCombo.addItem(CONCERN_TYPE_HYPERPIGMENTATION);
         concernCombo.addItem(CONCERN_TYPE_DRYNESS);
@@ -320,6 +366,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         public void mouseClicked(MouseEvent e) {
             MadeForMeSkinCareAppUI.this.requestFocusInWindow();
         }
+
     }
 
     // starts the application

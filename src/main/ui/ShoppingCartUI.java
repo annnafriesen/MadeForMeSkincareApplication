@@ -17,8 +17,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-public class ShoppingCartPanel extends JInternalFrame implements ListSelectionListener {
-/*
+public class ShoppingCartUI extends JInternalFrame implements ListSelectionListener {
+    /*
      * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
      *
      * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
     private DefaultListModel listModel;
 
     private Shopper shopper;
-    private static ShoppingCart shoppingCart;
+    private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
 
     private static final String removeString = "Remove";
@@ -70,7 +70,7 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
     private Component theParent;
 
 
-    public ShoppingCartPanel(ShoppingCart sc, Component parent) {
+    public ShoppingCartUI(ShoppingCart sc, Component parent) {
         super("Shopping Cart", false, false, false, false);
         shoppingCart = sc;
         theParent = parent;
@@ -82,13 +82,9 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
 
         TheOrdinaryProducts theOrdinaryProducts = new TheOrdinaryProducts();
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
-        shopper = new Shopper();
-        shoppingCart = new ShoppingCart(shopper);
+        shopper = sc.getShopper();
 
         listModel = new DefaultListModel();
-        for (Product p : shoppingCart.getProductsInCart()) {
-            listModel.addElement(p.getProductName());
-        }
 
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
@@ -107,18 +103,21 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
         removeButton = new JButton(removeString);
         removeButton.setActionCommand(removeString);
         removeButton.addActionListener(new RemoveProduct());
+        removeButton.setEnabled(false);
 
         //TODO:3
         //SAVE BUTTON
         saveButton = new JButton(saveString);
         saveButton.setActionCommand(saveString);
         saveButton.addActionListener(new SaveCart());
+        saveButton.setEnabled(false);
 
         //TODO:4
         //LOAD BUTTON
         loadButton = new JButton(loadString);
         loadButton.setActionCommand(loadString);
         loadButton.addActionListener(new LoadFile());
+        loadButton.setEnabled(true);
 
         //Create a panel that uses BoxLayout.
         JPanel buttonPane = new JPanel();
@@ -133,6 +132,20 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
 
         add(listScrollPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
+    }
+
+    public void addProductToList(Product p, int index) {
+        //TODO changed from addElement to insertElementAt
+        listModel.insertElementAt(p.getProductName(), index);
+        list.setSelectedIndex(index);
+        list.ensureIndexIsVisible(index);
+        makeButtonsVisible();
+    }
+
+    private void makeButtonsVisible() {
+        removeButton.setEnabled(true);
+        saveButton.setEnabled(true);
+        loadButton.setEnabled(true);
     }
 
     class RemoveProduct implements ActionListener {
@@ -160,15 +173,21 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
         }
     }
 
-    //TODO: view details of product
+
     class SaveCart implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
             int index = list.getSelectedIndex();
 
-            saveShoppingCart();
+            try {
+                jsonWriter.open();
+                jsonWriter.writeShoppingCart(shoppingCart);
+                jsonWriter.close();
+            } catch (FileNotFoundException exception) {
+                JOptionPane.showMessageDialog(null,
+                        "File Not Found.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
             int size = listModel.getSize();
 
@@ -182,60 +201,46 @@ public class ShoppingCartPanel extends JInternalFrame implements ListSelectionLi
         }
     }
 
-    //HELPER
-    // EFFECTS: saves the workroom to file
-    private void saveShoppingCart() {
-        try {
-            jsonWriter.open();
-            jsonWriter.writeShoppingCart(shoppingCart);
-            jsonWriter.close();
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null,
-                    "File Not Found.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
+    //EFFECTS: loads the shopping cart from file and puts it in the shopping cart frame
     class LoadFile implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
             int index = list.getSelectedIndex();
 
             loadShoppingCart();
 
             int size = listModel.getSize();
 
-            if (size == 0) { //Nobody's left, disable firing.
-                loadButton.setEnabled(false);
-
-            }
-
             list.setSelectedIndex(index);
             list.ensureIndexIsVisible(index);
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: loads workroom from file
     private void loadShoppingCart() {
-        String name = shoppingCart.getShopper().getCustomerName();
         try {
             shoppingCart = jsonReader.read();
             //TODO: make it so shopping cart is replaced
-        } catch (IOException e) {
+            listModel.removeAllElements();
+            for (Product p : shoppingCart.getProductsInCart()) {
+                int i = 0;
+                listModel.insertElementAt(p.getProductName(), i);
+                list.setSelectedIndex(i);
+                list.ensureIndexIsVisible(i);
+                i++;
+            }
+        } catch (IOException exception) {
             JOptionPane.showMessageDialog(null,
                     "Unable to read from file: " + JSON_STORE,
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+
     }
+
 
     /**
      * Sets the position of this remote control UI relative to parent component
-     * @param parent   the parent component
+     *
+     * @param parent the parent component
      */
     private void setPosition(Component parent) {
         setLocation(parent.getWidth() - getWidth(), 0);
