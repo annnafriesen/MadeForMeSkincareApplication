@@ -110,7 +110,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         saveButton = new JButton(saveString);
         saveButton.setActionCommand(saveString);
         saveButton.addActionListener(new SaveCart());
-        saveButton.setEnabled(false);
+        saveButton.setEnabled(true);
 
         //TODO:4
         //LOAD BUTTON
@@ -135,7 +135,6 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     }
 
     public void addProductToList(Product p, int index) {
-        //TODO changed from addElement to insertElementAt
         listModel.insertElementAt(p.getProductName(), index);
         list.setSelectedIndex(index);
         list.ensureIndexIsVisible(index);
@@ -144,7 +143,6 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
 
     private void makeButtonsVisible() {
         removeButton.setEnabled(true);
-        saveButton.setEnabled(true);
         loadButton.setEnabled(true);
     }
 
@@ -185,16 +183,16 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
             } catch (FileNotFoundException exception) {
                 JOptionPane.showMessageDialog(null,
                         "File Not Found.",
-                        "Error",
+                        "Unable to write to file: " + JSON_STORE,
                         JOptionPane.ERROR_MESSAGE);
             }
 
             int size = listModel.getSize();
 
-            if (size == 0) { //Nobody's left, disable firing.
-                saveButton.setEnabled(false);
+            //if (size == 0) { //Nobody's left, disable firing.
+              //  saveButton.setEnabled(false);
 
-            }
+            //}
 
             list.setSelectedIndex(index);
             list.ensureIndexIsVisible(index);
@@ -204,37 +202,30 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     //EFFECTS: loads the shopping cart from file and puts it in the shopping cart frame
     class LoadFile implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            int index = list.getSelectedIndex();
+            //int index = list.getSelectedIndex();
 
-            loadShoppingCart();
+            try {
+                shoppingCart = jsonReader.read();
+                //TODO: make it so shopping cart is replaced
+                listModel.removeAllElements();
+                for (Product p : shoppingCart.getProductsInCart()) {
+                    int index = 0;
+                    listModel.insertElementAt(p.getProductName(), index);
+                    list.setSelectedIndex(index);
+                    list.ensureIndexIsVisible(index);
+                    index++;
+                }
 
-            int size = listModel.getSize();
 
-            list.setSelectedIndex(index);
-            list.ensureIndexIsVisible(index);
-        }
-    }
-
-    private void loadShoppingCart() {
-        try {
-            shoppingCart = jsonReader.read();
-            //TODO: make it so shopping cart is replaced
-            listModel.removeAllElements();
-            for (Product p : shoppingCart.getProductsInCart()) {
-                int i = 0;
-                listModel.insertElementAt(p.getProductName(), i);
-                list.setSelectedIndex(i);
-                list.ensureIndexIsVisible(i);
-                i++;
+            } catch (IOException exception) {
+                JOptionPane.showMessageDialog(null,
+                        "Unable to read from file: " + JSON_STORE,
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
-        } catch (IOException exception) {
-            JOptionPane.showMessageDialog(null,
-                    "Unable to read from file: " + JSON_STORE,
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
         }
-
     }
+
 
 
     /**

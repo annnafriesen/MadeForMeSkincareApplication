@@ -24,10 +24,11 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private final JInternalFrame startFrame;
     private final JInternalFrame shoppingCartFrame;
     private JTextField shopperName;
+    private JTextField maxPrice;
     private JList recommendationList;
     private DefaultListModel recommendationListModel;
     private JScrollPane listScrollPane;
-    ShoppingCartUI shoppingCartPanel;
+    private ShoppingCartUI shoppingCartPanel;
     private Shopper shopper;
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
@@ -38,6 +39,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private static final String viewString = "View Info";
     private static final String addString = "Add To Cart";
     private static final String submitString = "Submit";
+    private JLabel nameLabel;
+    private JLabel maxPriceLabel;
 
     private static final String SKIN_TYPE_OILY = "oily";
     private static final String SKIN_TYPE_COMBO = "combination";
@@ -90,10 +93,16 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //EFFECTS: adds questionnaire panel to desktop on north
     private void addQuestionnairePanel() {
         JPanel questionnairePanel = new JPanel();
-        questionnairePanel.setLayout(new GridLayout(3, 1));
+        questionnairePanel.setLayout(new GridLayout(4, 1));
 
+        //nameLabel = new JLabel("Enter name:", SwingConstants.LEADING);
+        //questionnairePanel.add(nameLabel);
         shopperName = new JTextField("Enter name", 10);
         questionnairePanel.add(shopperName);
+        //maxPriceLabel = new JLabel("Enter max price:");
+        //questionnairePanel.add(maxPriceLabel);
+        maxPrice = new JTextField("Enter max price", 7);
+        questionnairePanel.add(maxPrice);
         questionnairePanel.add(createSkinCombo());
         questionnairePanel.add(createConcernCombo());
         submitButton = new JButton(submitString);
@@ -172,7 +181,6 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     class ViewProduct implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
-            //GET INDEX DETAILS
             //TODO: add an icon
             JOptionPane.showMessageDialog(null,
                     shoppingCart.getRecommendationList().get(index).getProductName()
@@ -194,15 +202,22 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
-    //Creates action for the add button
+    //EFFECTS: Creates action for the add button. If max price range is met, dialog box pops up to alert user of limit
+    // being reached
     class AddProduct implements ActionListener {
+        //TODO: option to add wishlist
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
-
             int listIndex = shoppingCart.getRecommendationList().size() - 1;
             Product product = shoppingCart.getRecommendationList().get(listIndex - index);
-            shoppingCart.addProductToCart(product);
-            shoppingCartPanel.addProductToList(product, index);
+            if (shoppingCart.addProductToCart(product)) {
+                shoppingCartPanel.addProductToList(product, index);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Your cart has reached its max price range!",
+                        "Price Limit Reached",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
 
             int size = recommendationListModel.getSize();
 
@@ -211,10 +226,6 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
             }
             recommendationList.setSelectedIndex(index);
             recommendationList.ensureIndexIsVisible(index);
-            //else { //Select an index.
-            //    if (index == recommendationListModel.getSize()) {
-            //        //removed item in last position
-            //        index--;
         }
     }
 
@@ -233,9 +244,9 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                 saveSkinTypeAnswers(selectedSkinType);
                 saveConcernAnswers(selectedConcernType);
                 saveUsersName(shopperName.getText());
+                saveMaxPrice(maxPrice.getText());
                 createRecommendationList();
                 recommendationListModel.removeAllElements();
-                //TODO: is this the issue?
                 for (Product p : shoppingCart.getRecommendationList()) {
                     int index = 0;
                     recommendationListModel.insertElementAt(p.getProductName(), index);
@@ -243,16 +254,21 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                     recommendationList.ensureIndexIsVisible(index);
                     index++;
                 }
-                makeButtonsVisible();
+                addButtonVisibility();
             } catch (LoginException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
 
-        private void makeButtonsVisible() {
+        private void addButtonVisibility() {
             addButton.setEnabled(true);
             viewButton.setEnabled(true);
+            shopperName.setEnabled(false);
+            maxPrice.setEnabled(false);
+            concernCombo.setEnabled(false);
+            skinCombo.setEnabled(false);
+            submitButton.setEnabled(false);
         }
     }
 
@@ -326,6 +342,14 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private void saveUsersName(String input) throws LoginException {
         if (!(input == null)) {
             shoppingCart.getShopper().setName(input);
+        }
+    }
+
+    //EFFECTS: sets the users input into textField as the shopper's max price
+    private void saveMaxPrice(String input) throws LoginException {
+        //TODO: number format excpetion
+        if (!(input == null)) {
+            shoppingCart.getShopper().setMaxPrice(Double.parseDouble(input));
         }
     }
 
