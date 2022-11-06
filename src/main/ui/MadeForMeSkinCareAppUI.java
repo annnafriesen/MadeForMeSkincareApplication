@@ -14,7 +14,15 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 
-//RFERENCE: alarm system
+//REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project provided in CPSC 210,
+// which can be found at https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/ I referenced the AlarmSystem to
+// learn how to add panels and buttons to my gui, as well as to learn how action events work.
+// Additionally, I referenced the ListDemo Project provided in the Java tutorials on Oracle.com, which can be found at
+// https://docs.oracle.com/javase/tutorial/displayCode.html?code=https:
+// docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java. I
+// referenced this project to learn how to create a scroll panel for the recommendation list.
+// See ShoppingCartUI class for copyright notice.
+
 public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
     public static final int WIDTH = 750;
     public static final int HEIGHT = 600;
@@ -23,6 +31,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private final JDesktopPane desktop;
     private final JInternalFrame startFrame;
     private final JInternalFrame shoppingCartFrame;
+    private final ImageIcon theOrdinaryLogo = new ImageIcon("model/theOrdinaryLogo.png");
     private JTextField shopperName;
     private JTextField maxPrice;
     private JList recommendationList;
@@ -58,12 +67,14 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
+        desktop.setBackground(Color.BLACK);
         startFrame = new JInternalFrame("Questionnaire", false, false, false,
                 false);
         startFrame.setLayout(new BorderLayout());
         shoppingCartFrame = new JInternalFrame("Shopping Cart", false, false, false,
                 false);
         shoppingCartFrame.setLayout(new BorderLayout());
+        //TODO: logo isn't working
 
         setContentPane(desktop);
         setTitle("MadeForMe SkinCare");
@@ -188,7 +199,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                             + "\nIngredient Lists: " + shoppingCart.getRecommendationList().get(index).getIngredients()
                             + "\nPriced at $" + shoppingCart.getRecommendationList().get(index).getPrice() + "0",
                     "Product Information",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE, theOrdinaryLogo);
 
             int size = recommendationListModel.getSize();
 

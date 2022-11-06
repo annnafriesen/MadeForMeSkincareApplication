@@ -17,6 +17,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+// REFERENCES: the following code mimics behaviour seen in the ListDemo Project provided in the Java tutorials on
+// Oracle.com, which can be found at https://docs.oracle.com/javase/tutorial/displayCode.html?code=https:
+// docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java. I
+// referenced this project to learn how to create a scroll panel for the shopping cart. Please refer to the copyright
+// notice below.
+
 public class ShoppingCartUI extends JInternalFrame implements ListSelectionListener {
     /*
      * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
@@ -190,7 +196,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
             int size = listModel.getSize();
 
             //if (size == 0) { //Nobody's left, disable firing.
-              //  saveButton.setEnabled(false);
+            //    saveButton.setEnabled(false);
 
             //}
 
@@ -201,12 +207,12 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
 
     //EFFECTS: loads the shopping cart from file and puts it in the shopping cart frame
     class LoadFile implements ActionListener {
+        //TODO: currently you can't add before loading and you can't save
         public void actionPerformed(ActionEvent e) {
             //int index = list.getSelectedIndex();
 
             try {
                 shoppingCart = jsonReader.read();
-                //TODO: make it so shopping cart is replaced
                 listModel.removeAllElements();
                 for (Product p : shoppingCart.getProductsInCart()) {
                     int index = 0;
