@@ -55,8 +55,8 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
      */
 
-    private JList list;
-    private DefaultListModel listModel;
+    private JList cartList;
+    private DefaultListModel cartListModel;
 
     private Shopper shopper;
     private ShoppingCart shoppingCart;
@@ -90,15 +90,15 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
         shopper = sc.getShopper();
 
-        listModel = new DefaultListModel();
+        cartListModel = new DefaultListModel();
 
         //Create the list and put it in a scroll pane.
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
-        list.setVisibleRowCount(shoppingCart.getProductsInCart().size() + 1);
-        JScrollPane listScrollPane = new JScrollPane(list);
+        cartList = new JList(cartListModel);
+        cartList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        cartList.setSelectedIndex(0);
+        cartList.addListSelectionListener(this);
+        cartList.setVisibleRowCount(shoppingCart.getProductsInCart().size() + 1);
+        JScrollPane listScrollPane = new JScrollPane(cartList);
 
         addButtons(listScrollPane);
 
@@ -140,10 +140,11 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
-    public void addProductToList(Product p, int index) {
-        listModel.insertElementAt(p.getProductName(), index);
-        list.setSelectedIndex(index);
-        list.ensureIndexIsVisible(index);
+    public void addProductToList(Product p) {
+        //TODO: used to pass in index? which seems to work!
+        cartListModel.addElement(p.getProductName());
+        //cartList.setSelectedIndex(index);
+        //cartList.ensureIndexIsVisible(index);
         makeButtonsVisible();
     }
 
@@ -157,30 +158,31 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
             //This method can be called only if
             //there's a valid selection
             //so go ahead and remove whatever's selected.
-            int index = list.getSelectedIndex();
-            listModel.remove(index);
+            int index = cartList.getSelectedIndex();
+            cartListModel.remove(index);
 
-            int size = listModel.getSize();
+            int size = cartListModel.getSize();
 
             if (size == 0) { //Nobody's left, disable firing.
                 removeButton.setEnabled(false);
 
             } else { //Select an index.
-                if (index == listModel.getSize()) {
+                if (index == cartListModel.getSize()) {
                     //removed item in last position
                     index--;
                 }
 
-                list.setSelectedIndex(index);
-                list.ensureIndexIsVisible(index);
+                cartList.setSelectedIndex(index);
+                cartList.ensureIndexIsVisible(index);
             }
         }
     }
 
 
     class SaveCart implements ActionListener {
+        //TODO: fix this
         public void actionPerformed(ActionEvent e) {
-            int index = list.getSelectedIndex();
+            int index = cartList.getSelectedIndex();
 
             try {
                 jsonWriter.open();
@@ -193,15 +195,15 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
                         JOptionPane.ERROR_MESSAGE);
             }
 
-            int size = listModel.getSize();
+            //int size = cartListModel.getSize();
 
             //if (size == 0) { //Nobody's left, disable firing.
             //    saveButton.setEnabled(false);
 
             //}
 
-            list.setSelectedIndex(index);
-            list.ensureIndexIsVisible(index);
+            cartList.setSelectedIndex(index);
+            cartList.ensureIndexIsVisible(index);
         }
     }
 
@@ -213,12 +215,12 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
 
             try {
                 shoppingCart = jsonReader.read();
-                listModel.removeAllElements();
+                cartListModel.removeAllElements();
                 for (Product p : shoppingCart.getProductsInCart()) {
                     int index = 0;
-                    listModel.insertElementAt(p.getProductName(), index);
-                    list.setSelectedIndex(index);
-                    list.ensureIndexIsVisible(index);
+                    cartListModel.insertElementAt(p.getProductName(), index);
+                    cartList.setSelectedIndex(index);
+                    cartList.ensureIndexIsVisible(index);
                     index++;
                 }
 
@@ -248,7 +250,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
 
-            if (list.getSelectedIndex() == -1) {
+            if (cartList.getSelectedIndex() == -1) {
                 //No selection, disable fire button.
                 removeButton.setEnabled(false);
 

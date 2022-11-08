@@ -32,3 +32,16 @@ excess time and money in this process so others can feel confident in their skin
 list and wishlist to file.
 - As a user, when I start the application, I want to be given the option to load my questionnaire answers, shopping 
 cart, recommendation list and wishlist from file.
+
+### Instructions for Grader
+
+- You can generate the first required event related to adding Xs to a Y by clicking the "Add" button to add a product
+to your shopping cart.
+- You can generate the second required event related to adding Xs to a Y by clicking the "Remove" button to remove a
+product from your shopping cart.
+- You can locate my visual component by clicking the "View" button to view product details. This will display the
+Ordinary logo.
+- You can save the state of my application by clicking the "Save" button on the shopping cart
+panel.
+- You can reload the state of my application by clicking the "Load" button on the shopping
+cart panel.

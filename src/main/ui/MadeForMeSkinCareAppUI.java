@@ -4,6 +4,7 @@ import model.*;
 
 import javax.security.auth.login.LoginException;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -12,6 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+
+import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
+import static model.ShoppingCart.DISCOUNT;
 
 
 //REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project provided in CPSC 210,
@@ -38,6 +42,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private DefaultListModel recommendationListModel;
     private JScrollPane listScrollPane;
     private ShoppingCartUI shoppingCartPanel;
+
     private Shopper shopper;
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
@@ -50,6 +55,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private static final String submitString = "Submit";
     private JLabel nameLabel;
     private JLabel maxPriceLabel;
+    private JLabel skinTypeLabel;
+    private JLabel concernLabel;
 
     private static final String SKIN_TYPE_OILY = "oily";
     private static final String SKIN_TYPE_COMBO = "combination";
@@ -74,7 +81,6 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         shoppingCartFrame = new JInternalFrame("Shopping Cart", false, false, false,
                 false);
         shoppingCartFrame.setLayout(new BorderLayout());
-        //TODO: logo isn't working
 
         setContentPane(desktop);
         setTitle("MadeForMe SkinCare");
@@ -101,27 +107,55 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
     }
 
+
     //EFFECTS: adds questionnaire panel to desktop on north
     private void addQuestionnairePanel() {
         JPanel questionnairePanel = new JPanel();
-        questionnairePanel.setLayout(new GridLayout(4, 1));
-
-        //nameLabel = new JLabel("Enter name:", SwingConstants.LEADING);
-        //questionnairePanel.add(nameLabel);
-        shopperName = new JTextField("Enter name", 10);
+        questionnairePanel.setLayout(new GridLayout(6, 1));
+        setBorder(questionnairePanel);
+        nameLabel = new JLabel("Enter name:", SwingConstants.RIGHT);
+        questionnairePanel.add(nameLabel);
+        nameLabel.setLabelFor(shopperName);
+        shopperName = new JTextField(10);
         questionnairePanel.add(shopperName);
-        //maxPriceLabel = new JLabel("Enter max price:");
-        //questionnairePanel.add(maxPriceLabel);
-        maxPrice = new JTextField("Enter max price", 7);
+
+        maxPriceLabel = new JLabel("Enter max price:", SwingConstants.RIGHT);
+        maxPriceLabel.setLabelFor(maxPrice);
+        questionnairePanel.add(maxPriceLabel);
+        maxPrice = new JTextField(7);
         questionnairePanel.add(maxPrice);
-        questionnairePanel.add(createSkinCombo());
-        questionnairePanel.add(createConcernCombo());
+
+        addComboToPanel(questionnairePanel);
+
         submitButton = new JButton(submitString);
         submitButton.setActionCommand(submitString);
         submitButton.addActionListener(new SubmitAnswersAction());
         questionnairePanel.add(submitButton);
-
         startFrame.add(questionnairePanel, BorderLayout.PAGE_START);
+
+    }
+
+    public void setBorder(JPanel panel) {
+        TitledBorder border = new TitledBorder("Receive a " + DISCOUNT * 100 + "% on orders over $"
+                + AMOUNT_NEEDED_FOR_DISCOUNT + "0!");
+        border.setTitleJustification(TitledBorder.CENTER);
+        border.setTitlePosition(TitledBorder.TOP);
+        border.setTitleColor(Color.BLUE);
+
+        panel.setBorder(border);
+    }
+
+    //EFFECTS: creates combo boxes for skin type and concern type, each with labels
+    private void addComboToPanel(JPanel questionnairePanel) {
+        skinTypeLabel = new JLabel("Select skin type:", SwingConstants.RIGHT);
+        skinTypeLabel.setLabelFor(createSkinCombo());
+        questionnairePanel.add(skinTypeLabel);
+        questionnairePanel.add(createSkinCombo());
+
+        concernLabel = new JLabel("Select skin concern:", SwingConstants.RIGHT);
+        concernLabel.setLabelFor(createConcernCombo());
+        questionnairePanel.add(concernLabel);
+        questionnairePanel.add(createConcernCombo());
     }
 
     //EFFECTS: adds recommendation panel to start panel's internal frame
@@ -192,7 +226,6 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     class ViewProduct implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
-            //TODO: add an icon
             JOptionPane.showMessageDialog(null,
                     shoppingCart.getRecommendationList().get(index).getProductName()
                             + ": \n" + shoppingCart.getRecommendationList().get(index).getDescription()
@@ -216,13 +249,13 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //EFFECTS: Creates action for the add button. If max price range is met, dialog box pops up to alert user of limit
     // being reached
     class AddProduct implements ActionListener {
-        //TODO: option to add wishlist
+        //TODO: issue with only being able to add products in order
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
             int listIndex = shoppingCart.getRecommendationList().size() - 1;
             Product product = shoppingCart.getRecommendationList().get(listIndex - index);
             if (shoppingCart.addProductToCart(product)) {
-                shoppingCartPanel.addProductToList(product, index);
+                shoppingCartPanel.addProductToList(product);
             } else {
                 JOptionPane.showMessageDialog(null,
                         "Your cart has reached its max price range!",
@@ -230,11 +263,6 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                         JOptionPane.INFORMATION_MESSAGE);
             }
 
-            int size = recommendationListModel.getSize();
-
-            if (size == 0) { //Nobody's left, disable firing.
-                addButton.setEnabled(false);
-            }
             recommendationList.setSelectedIndex(index);
             recommendationList.ensureIndexIsVisible(index);
         }
@@ -329,7 +357,6 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     }
 
     //EFFECTS: sets the users selected concern type option as shopper's concern type
-    //TODO private or public?
     public void saveConcernAnswers(String selected) throws LoginException {
         switch (selected) {
             case CONCERN_TYPE_ACNE:
@@ -358,9 +385,16 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
     //EFFECTS: sets the users input into textField as the shopper's max price
     private void saveMaxPrice(String input) throws LoginException {
-        //TODO: number format excpetion
-        if (!(input == null)) {
-            shoppingCart.getShopper().setMaxPrice(Double.parseDouble(input));
+        //TODO: how to a catch number format exception???
+        try {
+            if (!(input == null)) {
+                double price = Double.parseDouble(input);
+                shoppingCart.getShopper().setMaxPrice(price);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid number",
+                    "System Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
