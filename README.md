@@ -40,7 +40,8 @@ to your shopping cart.
 - You can generate the second required event related to adding Xs to a Y by clicking the "Remove" button to remove a
 product from your shopping cart.
 - You can locate my visual component by clicking the "View" button to view product details. This will display the
-Ordinary logo.
+Ordinary logo image. As well, if the shopper's max price is reached, a dialog box with an image of an overflowing 
+shopping cart will appear alongside a message alerting the user that their max price has been reached. 
 - You can save the state of my application by clicking the "Save" button on the shopping cart
 panel.
 - You can reload the state of my application by clicking the "Load" button on the shopping

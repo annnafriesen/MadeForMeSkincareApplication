@@ -23,6 +23,7 @@ import java.util.List;
 // referenced this project to learn how to create a scroll panel for the shopping cart. Please refer to the copyright
 // notice below.
 
+//EFFECTS: creates the GUI for the shopping cart panel
 public class ShoppingCartUI extends JInternalFrame implements ListSelectionListener {
     /*
      * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
@@ -75,7 +76,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     private static final int HEIGHT = MadeForMeSkinCareAppUI.HEIGHT;
     private Component theParent;
 
-
+//EFFECTS: constructs shopping cart panel
     public ShoppingCartUI(ShoppingCart sc, Component parent) {
         super("Shopping Cart", false, false, false, false);
         shoppingCart = sc;
@@ -92,7 +93,6 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
 
         cartListModel = new DefaultListModel();
 
-        //Create the list and put it in a scroll pane.
         cartList = new JList(cartListModel);
         cartList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cartList.setSelectedIndex(0);
@@ -104,6 +104,8 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds buttons (remove, save and load) to the shopping cart panel
     public void addButtons(JScrollPane listScrollPane) {
         //REMOVE BUTTON
         removeButton = new JButton(removeString);
@@ -111,21 +113,18 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         removeButton.addActionListener(new RemoveProduct());
         removeButton.setEnabled(false);
 
-        //TODO:3
         //SAVE BUTTON
         saveButton = new JButton(saveString);
         saveButton.setActionCommand(saveString);
         saveButton.addActionListener(new SaveCart());
         saveButton.setEnabled(true);
 
-        //TODO:4
         //LOAD BUTTON
         loadButton = new JButton(loadString);
         loadButton.setActionCommand(loadString);
         loadButton.addActionListener(new LoadFile());
         loadButton.setEnabled(true);
 
-        //Create a panel that uses BoxLayout.
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane,
                 BoxLayout.LINE_AXIS));
@@ -140,35 +139,28 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds products from recommendation list to shopping cart, and enables remove and load buttons
     public void addProductToList(Product p) {
-        //TODO: used to pass in index? which seems to work!
         cartListModel.addElement(p.getProductName());
-        //cartList.setSelectedIndex(index);
-        //cartList.ensureIndexIsVisible(index);
-        makeButtonsVisible();
-    }
-
-    private void makeButtonsVisible() {
         removeButton.setEnabled(true);
         loadButton.setEnabled(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: creates action for the "remove" button, removes product from cart and decrements list index
     class RemoveProduct implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever's selected.
             int index = cartList.getSelectedIndex();
             cartListModel.remove(index);
 
             int size = cartListModel.getSize();
 
-            if (size == 0) { //Nobody's left, disable firing.
+            if (size == 0) {
                 removeButton.setEnabled(false);
 
-            } else { //Select an index.
+            } else {
                 if (index == cartListModel.getSize()) {
-                    //removed item in last position
                     index--;
                 }
 
@@ -178,9 +170,10 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         }
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: creates action for the "save" button; saves shopping cart to JSON file
+    // catches FileNotFoundException and displays dialog box to alert user
     class SaveCart implements ActionListener {
-        //TODO: fix this
         public void actionPerformed(ActionEvent e) {
             int index = cartList.getSelectedIndex();
 
@@ -195,24 +188,16 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
                         JOptionPane.ERROR_MESSAGE);
             }
 
-            //int size = cartListModel.getSize();
-
-            //if (size == 0) { //Nobody's left, disable firing.
-            //    saveButton.setEnabled(false);
-
-            //}
-
             cartList.setSelectedIndex(index);
             cartList.ensureIndexIsVisible(index);
         }
     }
 
-    //EFFECTS: loads the shopping cart from file and puts it in the shopping cart frame
+    //MODIFIES: this
+    //EFFECTS: loads the shopping cart from JSON file and puts it in the shopping cart frame; catches IOException
+    // and displays dialog box to alert user of exception
     class LoadFile implements ActionListener {
-        //TODO: currently you can't add before loading and you can't save
         public void actionPerformed(ActionEvent e) {
-            //int index = list.getSelectedIndex();
-
             try {
                 shoppingCart = jsonReader.read();
                 cartListModel.removeAllElements();
@@ -223,8 +208,6 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
                     cartList.ensureIndexIsVisible(index);
                     index++;
                 }
-
-
             } catch (IOException exception) {
                 JOptionPane.showMessageDialog(null,
                         "Unable to read from file: " + JSON_STORE,
@@ -234,32 +217,23 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         }
     }
 
-
-
-    /**
-     * Sets the position of this remote control UI relative to parent component
-     *
-     * @param parent the parent component
-     */
+    //MODIFIES: this
+    //EFFECTS: Sets the position of this remote control UI relative to parent component
     private void setPosition(Component parent) {
         setLocation(parent.getWidth() - getWidth(), 0);
     }
-
 
     //This method is required by ListSelectionListener.
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
 
             if (cartList.getSelectedIndex() == -1) {
-                //No selection, disable fire button.
                 removeButton.setEnabled(false);
 
             } else {
-                //Selection, enable the fire button.
                 removeButton.setEnabled(true);
             }
         }
     }
 
 }
-

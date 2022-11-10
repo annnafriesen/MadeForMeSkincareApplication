@@ -19,7 +19,7 @@ import static model.ShoppingCart.DISCOUNT;
 
 
 //REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project provided in CPSC 210,
-// which can be found at https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/ I referenced the AlarmSystem to
+// which can be found at https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/. I referenced the AlarmSystem to
 // learn how to add panels and buttons to my gui, as well as to learn how action events work.
 // Additionally, I referenced the ListDemo Project provided in the Java tutorials on Oracle.com, which can be found at
 // https://docs.oracle.com/javase/tutorial/displayCode.html?code=https:
@@ -27,6 +27,7 @@ import static model.ShoppingCart.DISCOUNT;
 // referenced this project to learn how to create a scroll panel for the recommendation list.
 // See ShoppingCartUI class for copyright notice.
 
+//Represents GUI of the MadeForMe SkinCare application.
 public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
     public static final int WIDTH = 750;
     public static final int HEIGHT = 600;
@@ -36,6 +37,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private final JInternalFrame startFrame;
     private final JInternalFrame shoppingCartFrame;
     private final ImageIcon theOrdinaryLogo = new ImageIcon("model/theOrdinaryLogo.png");
+    private final ImageIcon fullShoppingCartImage = new ImageIcon("model/FullShoppingCart.png");
     private JTextField shopperName;
     private JTextField maxPrice;
     private JList recommendationList;
@@ -68,13 +70,13 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private static final String CONCERN_TYPE_HYPERPIGMENTATION = "hyperpigmentation";
     private static final String CONCERN_TYPE_REDNESS = "redness";
 
-
+    //EFFECTS: Constructs GUI for the MadeForMe SkinCare app
     public MadeForMeSkinCareAppUI() {
         setup();
 
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
-        desktop.setBackground(Color.BLACK);
+        desktop.setBackground(Color.ORANGE);
         startFrame = new JInternalFrame("Questionnaire", false, false, false,
                 false);
         startFrame.setLayout(new BorderLayout());
@@ -100,6 +102,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: instantiates shopper, shopping cart and The Ordinary products
     public void setup() {
         shopper = new Shopper();
         shoppingCart = new ShoppingCart(shopper);
@@ -107,8 +111,9 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
     }
 
-
-    //EFFECTS: adds questionnaire panel to desktop on north
+    //MODIFIES: this
+    //EFFECTS: adds questionnaire panel to top of desktop; has fields and buttons for user input of name, max price,
+    // skin type and concern type
     private void addQuestionnairePanel() {
         JPanel questionnairePanel = new JPanel();
         questionnairePanel.setLayout(new GridLayout(6, 1));
@@ -131,20 +136,22 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         submitButton.setActionCommand(submitString);
         submitButton.addActionListener(new SubmitAnswersAction());
         questionnairePanel.add(submitButton);
-        startFrame.add(questionnairePanel, BorderLayout.PAGE_START);
+        startFrame.add(questionnairePanel, BorderLayout.NORTH);
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds border to questionnaire panel, displaying the discount message
     public void setBorder(JPanel panel) {
         TitledBorder border = new TitledBorder("Receive a " + DISCOUNT * 100 + "% on orders over $"
                 + AMOUNT_NEEDED_FOR_DISCOUNT + "0!");
         border.setTitleJustification(TitledBorder.CENTER);
         border.setTitlePosition(TitledBorder.TOP);
         border.setTitleColor(Color.BLUE);
-
         panel.setBorder(border);
     }
 
+    //MODIFIES: this
     //EFFECTS: creates combo boxes for skin type and concern type, each with labels
     private void addComboToPanel(JPanel questionnairePanel) {
         skinTypeLabel = new JLabel("Select skin type:", SwingConstants.RIGHT);
@@ -158,7 +165,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         questionnairePanel.add(createConcernCombo());
     }
 
-    //EFFECTS: adds recommendation panel to start panel's internal frame
+    //MODIFIES: this
+    //EFFECTS: adds recommendation list panel to start panel's internal frame
     private void addRecommendationPanel() {
         JPanel recommendationPanel = new JPanel();
         recommendationListModel = new DefaultListModel();
@@ -199,12 +207,14 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         return recommendationPanel;
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: adds the Shopping Cart panel to the desktop
     private void addShoppingCartPanel() {
         shoppingCartPanel = new ShoppingCartUI(shoppingCart, this);
         shoppingCartFrame.add(shoppingCartPanel);
         desktop.add(shoppingCartPanel);
     }
+
 
     @Override
     //TODO: what does this do?
@@ -212,17 +222,17 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         if (e.getValueIsAdjusting() == false) {
 
             if (recommendationList.getSelectedIndex() == -1) {
-                //No selection, disable fire button.
                 viewButton.setEnabled(false);
 
             } else {
-                //Selection, enable the fire button.
                 viewButton.setEnabled(true);
             }
         }
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: creates action for the view button; shows dialog box with product name, description, ingredient list,
+    // and price
     class ViewProduct implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
@@ -236,7 +246,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
             int size = recommendationListModel.getSize();
 
-            if (size == 0) { //Nobody's left, disable firing.
+            if (size == 0) {
                 viewButton.setEnabled(false);
 
             }
@@ -246,10 +256,10 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: Creates action for the add button. If max price range is met, dialog box pops up to alert user of limit
     // being reached
     class AddProduct implements ActionListener {
-        //TODO: issue with only being able to add products in order
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
             int listIndex = shoppingCart.getRecommendationList().size() - 1;
@@ -260,7 +270,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                 JOptionPane.showMessageDialog(null,
                         "Your cart has reached its max price range!",
                         "Price Limit Reached",
-                        JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.INFORMATION_MESSAGE, fullShoppingCartImage);
             }
 
             recommendationList.setSelectedIndex(index);
@@ -268,7 +278,9 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: creates action for the "submit" button. Tries to submit user's selected name, max price, skin type and
+    // concern type; catches LoginException and NumberFormatException and displays dialog box for each to alert user.
     private class SubmitAnswersAction extends AbstractAction {
 
         SubmitAnswersAction() {
@@ -280,10 +292,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
             String selectedSkinType = (String) skinCombo.getSelectedItem();
             String selectedConcernType = (String) concernCombo.getSelectedItem();
             try {
-                saveSkinTypeAnswers(selectedSkinType);
-                saveConcernAnswers(selectedConcernType);
-                saveUsersName(shopperName.getText());
-                saveMaxPrice(maxPrice.getText());
+                saveUserInput(selectedSkinType, selectedConcernType);
                 createRecommendationList();
                 recommendationListModel.removeAllElements();
                 for (Product p : shoppingCart.getRecommendationList()) {
@@ -297,9 +306,26 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
             } catch (LoginException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
                         JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid number. Digits only,"
+                                + "please!",
+                        "System Error", JOptionPane.ERROR_MESSAGE);
+
             }
         }
 
+        //MODIFIES: this
+        //EFFECTS: saves users input into respective category: name, max price, skin type, and concern type
+        private void saveUserInput(String selectedSkinType, String selectedConcernType) throws LoginException {
+            saveSkinTypeAnswers(selectedSkinType);
+            saveConcernAnswers(selectedConcernType);
+            saveUsersName(shopperName.getText());
+            saveMaxPrice(maxPrice.getText());
+        }
+
+        //MODIFIES: this
+        //EFFECTS: sets the questionnaire panel's button visibility after submit button has been pressed; ensures
+        // user cannot edit answers
         private void addButtonVisibility() {
             addButton.setEnabled(true);
             viewButton.setEnabled(true);
@@ -311,6 +337,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: shows recommendations for the Ordinary Products based on users answers, and adds products starting
     // from most recommended to least recommended (always recommends moisturizer and cleanser)
     public void createRecommendationList() {
@@ -339,7 +366,9 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
     }
 
+    //MODIFIES: this
     //EFFECTS: sets the users selected skin type option as shopper's skin type
+    // throws LoginException if no option is selected
     public void saveSkinTypeAnswers(String selected) throws LoginException {
         switch (selected) {
             case SKIN_TYPE_DRY:
@@ -356,7 +385,9 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: sets the users selected concern type option as shopper's concern type
+    // throws LoginException if no option is selected
     public void saveConcernAnswers(String selected) throws LoginException {
         switch (selected) {
             case CONCERN_TYPE_ACNE:
@@ -376,28 +407,31 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: sets the users input into textField as the shopper's name
+    // throws LoginException if no name is inputted
     private void saveUsersName(String input) throws LoginException {
         if (!(input == null)) {
             shoppingCart.getShopper().setName(input);
+        } else {
+            throw new LoginException();
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: sets the users input into textField as the shopper's max price
-    private void saveMaxPrice(String input) throws LoginException {
-        //TODO: how to a catch number format exception???
-        try {
-            if (!(input == null)) {
-                double price = Double.parseDouble(input);
-                shoppingCart.getShopper().setMaxPrice(price);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid number",
-                    "System Error", JOptionPane.ERROR_MESSAGE);
-
+    // throws NumberFormatException if input cannot be parsed to a double
+    // throws LoginException if no option is selected
+    private void saveMaxPrice(String input) throws LoginException, NumberFormatException {
+        if (!(input == null)) {
+            double price = Double.parseDouble(input);
+            shoppingCart.getShopper().setMaxPrice(price);
+        } else {
+            throw new LoginException();
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: creates a combo box with skin type options: oily, dry, and combo.
     private JComboBox<String> createSkinCombo() {
         skinCombo = new JComboBox<String>();
@@ -408,6 +442,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         return skinCombo;
     }
 
+    //MODIFIES: this
     //EFFECTS: creates a combo box with concern options: acne, hyperpigmentation, dryness and redness.
     private JComboBox<String> createConcernCombo() {
         concernCombo = new JComboBox<String>();
@@ -419,6 +454,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         return concernCombo;
     }
 
+    //MODIFIES: this
     //Centres frame on desktop
     private void centreOnScreen() {
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -426,10 +462,8 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
 
-    /**
-     * Represents action to be taken when user clicks desktop
-     * to switch focus. (Needed for key handling.)
-     */
+
+    //EFFECTS: Represents action to be taken when user clicks desktop to switch focus.
     private class DesktopFocusAction extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -438,7 +472,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
     }
 
-    // starts the application
+    //EFFECTS: starts the application
     public static void main(String[] args) {
         new MadeForMeSkinCareAppUI();
     }
