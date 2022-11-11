@@ -26,6 +26,8 @@ import static model.ShoppingCart.DISCOUNT;
 // docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java. I
 // referenced this project to learn how to create a scroll panel for the recommendation list.
 // See ShoppingCartUI class for copyright notice.
+// In my setBorder() method, I reference to the website Javacodex (https://www.javacodex.com/More-Examples/2/11) to
+// learn how to create a border to display the discount message.
 
 //Represents GUI of the MadeForMe SkinCare application.
 public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
