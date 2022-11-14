@@ -153,6 +153,9 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         public void actionPerformed(ActionEvent e) {
             int index = cartList.getSelectedIndex();
             cartListModel.remove(index);
+            int listIndex = shoppingCart.getProductsInCart().size() - 1;
+            Product product = shoppingCart.getProductsInCart().get(listIndex - index);
+            shoppingCart.removeProductFromCart(product);
 
             int size = cartListModel.getSize();
 
