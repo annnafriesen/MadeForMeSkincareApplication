@@ -66,12 +66,15 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     private static final String removeString = "Remove";
     private static final String saveString = "Save";
     private static final String loadString = "Load";
+    private static final String viewString = "View Info";
     private JButton removeButton;
     private JButton saveButton;
     private JButton loadButton;
+    private JButton viewButton;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private static final String JSON_STORE = "./data/shoppingCart.json";
+    private final ImageIcon theOrdinaryLogo = new ImageIcon("model/theOrdinaryLogo.png");
     private static final int WIDTH = MadeForMeSkinCareAppUI.WIDTH;
     private static final int HEIGHT = MadeForMeSkinCareAppUI.HEIGHT;
     private Component theParent;
@@ -100,13 +103,14 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         cartList.setVisibleRowCount(shoppingCart.getProductsInCart().size() + 1);
         JScrollPane listScrollPane = new JScrollPane(cartList);
 
+        createButtons(listScrollPane);
         addButtons(listScrollPane);
 
     }
 
     //MODIFIES: this
-    //EFFECTS: adds buttons (remove, save and load) to the shopping cart panel
-    public void addButtons(JScrollPane listScrollPane) {
+    //EFFECTS: creates buttons (remove, save and load) related to shopping cart
+    public void createButtons(JScrollPane listScrollPane) {
         //REMOVE BUTTON
         removeButton = new JButton(removeString);
         removeButton.setActionCommand(removeString);
@@ -125,6 +129,16 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         loadButton.addActionListener(new LoadFile());
         loadButton.setEnabled(true);
 
+        //VIEW BUTTON
+        viewButton = new JButton(viewString);
+        viewButton.setActionCommand(viewString);
+        viewButton.addActionListener(new ViewProductFromShoppingCart());
+        viewButton.setEnabled(false);
+    }
+
+    //MODIFIES: this
+    //EFFECTS: adds button onto shopping cart panel
+    public void addButtons(JScrollPane listScrollPane) {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane,
                 BoxLayout.LINE_AXIS));
@@ -133,6 +147,8 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         buttonPane.add(saveButton);
         buttonPane.add(Box.createHorizontalStrut(5));
         buttonPane.add(loadButton);
+        buttonPane.add(Box.createHorizontalStrut(5));
+        buttonPane.add(viewButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         add(listScrollPane, BorderLayout.CENTER);
@@ -145,6 +161,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         cartListModel.addElement(p.getProductName());
         removeButton.setEnabled(true);
         loadButton.setEnabled(false);
+        viewButton.setEnabled(true);
         cartList.setSelectedIndex(shoppingCart.getProductsInCart().size() - 1);
     }
 
@@ -203,15 +220,10 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     class LoadFile implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                ShoppingCart fileToLoad = jsonReader.read();
-                for (Product p : fileToLoad.getProductsInCart())  {
-                    shoppingCart.addProductToCart(p);
-                }
+                parseFileToShoppingCart();
                 shopper = jsonReader.read().getShopper();
-                //shoppingCart = jsonReader.read();
                 cartListModel.removeAllElements();
                 int index = 0;
-
                 for (Product p : shoppingCart.getProductsInCart()) {
                     cartListModel.insertElementAt(p.getProductName(), index);
                     cartList.setSelectedIndex(index);
@@ -225,6 +237,40 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
                         JOptionPane.ERROR_MESSAGE);
             }
             loadButton.setEnabled(false);
+            if (cartListModel.size() > 0) {
+                viewButton.setEnabled(true);
+            }
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: helper method for load action; reads file and adds product from file to shopping cart
+    public void parseFileToShoppingCart() throws IOException {
+        ShoppingCart fileToLoad = jsonReader.read();
+        for (Product p : fileToLoad.getProductsInCart()) {
+            shoppingCart.addProductToCart(p);
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: creates action for the view button; shows dialog box with product name, description, ingredient list,
+    // and price
+    class ViewProductFromShoppingCart implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            int index = cartList.getSelectedIndex();
+            JOptionPane.showMessageDialog(null,
+                    shoppingCart.getProductsInCart().get(index).getProductName()
+                            + ": \n" + shoppingCart.getProductsInCart().get(index).getDescription()
+                            + "\nIngredient Lists: "
+                            + shoppingCart.getProductsInCart().get(index).getIngredients()
+                            + "\nPriced at $" + shoppingCart.getProductsInCart().get(index).getPrice() + "0",
+                    "Product Information",
+                    JOptionPane.INFORMATION_MESSAGE, theOrdinaryLogo);
+
+            int size = cartListModel.getSize();
+            if (size == 0) {
+                viewButton.setEnabled(false);
+            }
         }
     }
 
