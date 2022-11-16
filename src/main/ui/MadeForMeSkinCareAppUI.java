@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
 
 import javax.security.auth.login.LoginException;
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.List;
 
 import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
@@ -33,47 +35,56 @@ import static model.ShoppingCart.DISCOUNT;
 public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
     public static final int WIDTH = 750;
     public static final int HEIGHT = 600;
-    private JComboBox<String> skinCombo;
-    private JComboBox<String> concernCombo;
     private final JDesktopPane desktop;
     private final JInternalFrame startFrame;
     private final JInternalFrame shoppingCartFrame;
     private final ImageIcon theOrdinaryLogo = new ImageIcon("model/theOrdinaryLogo.png");
     private final ImageIcon fullShoppingCartImage = new ImageIcon("model/FullShoppingCart.png");
+    private final ImageIcon theOrdinaryProducts = new ImageIcon("model/TheOrdinaryProducts.jpeg");
+
+    //PANELS, LABELS AND FIELDS
+    private JLabel nameLabel;
+    private JLabel maxPriceLabel;
+    private JLabel skinTypeLabel;
+    private JLabel concernLabel;
     private JTextField shopperName;
     private JTextField maxPrice;
+    private JComboBox<String> skinCombo;
+    private JComboBox<String> concernCombo;
     private JList recommendationList;
     private DefaultListModel recommendationListModel;
     private JScrollPane listScrollPane;
     private ShoppingCartUI shoppingCartPanel;
 
+    //OBJECTS
     private Shopper shopper;
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
+    private JsonReader jsonReader;
+    private static final String JSON_STORE = "./data/shoppingCart.json";
 
+    //BUTTONS
     private JButton viewButton;
     private JButton addButton;
     private JButton submitButton;
     private static final String viewString = "View Info";
     private static final String addString = "Add To Cart";
     private static final String submitString = "Submit";
-    private JLabel nameLabel;
-    private JLabel maxPriceLabel;
-    private JLabel skinTypeLabel;
-    private JLabel concernLabel;
 
+    //SKIN TYPE COMBO OPTIONS
     private static final String SKIN_TYPE_OILY = "oily";
     private static final String SKIN_TYPE_COMBO = "combination";
     private static final String SKIN_TYPE_DRY = "dry";
 
+    //CONCERN TYPE COMBO OPTIONS
     private static final String DEFAULT_TYPE = "";
     private static final String CONCERN_TYPE_ACNE = "acne";
     private static final String CONCERN_TYPE_DRYNESS = "dryness";
     private static final String CONCERN_TYPE_HYPERPIGMENTATION = "hyperpigmentation";
     private static final String CONCERN_TYPE_REDNESS = "redness";
 
-    //EFFECTS: Constructs GUI for the MadeForMe SkinCare app
-    public MadeForMeSkinCareAppUI() {
+    //EFFECTS: constructs the MadeForMeSkinCareApp gui with a desktop and two panels
+    private MadeForMeSkinCareAppUI() throws IOException {
         setup();
 
         desktop = new JDesktopPane();
@@ -106,11 +117,18 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
     //MODIFIES: this
     //EFFECTS: instantiates shopper, shopping cart and The Ordinary products
-    public void setup() {
+    public void setup() throws IOException {
         shopper = new Shopper();
+        jsonReader = new JsonReader(JSON_STORE);
+        shopper.setMaxPrice(jsonReader.read().getShopper().getMaxPrice());
         shoppingCart = new ShoppingCart(shopper);
         TheOrdinaryProducts theOrdinaryProducts = new TheOrdinaryProducts();
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
+    }
+
+    //EFFECTS: getter for shopping cart field
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
     }
 
     //MODIFIES: this
@@ -119,6 +137,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private void addQuestionnairePanel() {
         JPanel questionnairePanel = new JPanel();
         questionnairePanel.setLayout(new GridLayout(6, 1));
+        questionnairePanel.setBackground(new Color(0xFFB0F0F1, true));
         setBorder(questionnairePanel);
         nameLabel = new JLabel("Enter name:", SwingConstants.RIGHT);
         questionnairePanel.add(nameLabel);
@@ -132,7 +151,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         maxPrice = new JTextField(7);
         questionnairePanel.add(maxPrice);
 
-        addComboToPanel(questionnairePanel);
+        addCombosToPanel(questionnairePanel);
 
         submitButton = new JButton(submitString);
         submitButton.setActionCommand(submitString);
@@ -155,7 +174,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
     //MODIFIES: this
     //EFFECTS: creates combo boxes for skin type and concern type, each with labels
-    private void addComboToPanel(JPanel questionnairePanel) {
+    private void addCombosToPanel(JPanel questionnairePanel) {
         skinTypeLabel = new JLabel("Select skin type:", SwingConstants.RIGHT);
         skinTypeLabel.setLabelFor(createSkinCombo());
         questionnairePanel.add(skinTypeLabel);
@@ -212,14 +231,12 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //MODIFIES: this
     //EFFECTS: adds the Shopping Cart panel to the desktop
     private void addShoppingCartPanel() {
-        shoppingCartPanel = new ShoppingCartUI(shoppingCart, this);
+        shoppingCartPanel = new ShoppingCartUI(this, this);
         shoppingCartFrame.add(shoppingCartPanel);
         desktop.add(shoppingCartPanel);
     }
 
-
     @Override
-    //TODO: what does this do?
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
 
@@ -238,11 +255,14 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     class ViewProduct implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int index = recommendationList.getSelectedIndex();
+            int listIndex = shoppingCart.getRecommendationList().size() - 1;
+            int productNum = listIndex - index;
             JOptionPane.showMessageDialog(null,
-                    shoppingCart.getRecommendationList().get(index).getProductName()
-                            + ": \n" + shoppingCart.getRecommendationList().get(index).getDescription()
-                            + "\nIngredient Lists: " + shoppingCart.getRecommendationList().get(index).getIngredients()
-                            + "\nPriced at $" + shoppingCart.getRecommendationList().get(index).getPrice() + "0",
+                    shoppingCart.getRecommendationList().get(productNum).getProductName()
+                            + ": \n" + shoppingCart.getRecommendationList().get(productNum).getDescription()
+                            + "\nIngredient Lists: "
+                            + shoppingCart.getRecommendationList().get(productNum).getIngredients()
+                            + "\nPriced at $" + shoppingCart.getRecommendationList().get(productNum).getPrice() + "0",
                     "Product Information",
                     JOptionPane.INFORMATION_MESSAGE, theOrdinaryLogo);
 
@@ -283,6 +303,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //MODIFIES: this
     //EFFECTS: creates action for the "submit" button. Tries to submit user's selected name, max price, skin type and
     // concern type; catches LoginException and NumberFormatException and displays dialog box for each to alert user.
+    //Shows dialog box with welcome message if submit action is successful.
     private class SubmitAnswersAction extends AbstractAction {
 
         SubmitAnswersAction() {
@@ -297,14 +318,13 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                 saveUserInput(selectedSkinType, selectedConcernType);
                 createRecommendationList();
                 recommendationListModel.removeAllElements();
-                for (Product p : shoppingCart.getRecommendationList()) {
-                    int index = 0;
-                    recommendationListModel.insertElementAt(p.getProductName(), index);
-                    recommendationList.setSelectedIndex(index);
-                    recommendationList.ensureIndexIsVisible(index);
-                    index++;
-                }
+                parseLoadedShoppingCart();
                 addButtonVisibility();
+                JOptionPane.showMessageDialog(null,
+                        "Here is your personalized recommendation list, " + shopper.getCustomerName() + "! "
+                        + "\nClick 'ok' to start adding to your shopping cart.",
+                        "Begin your skin journey!",
+                        JOptionPane.INFORMATION_MESSAGE, theOrdinaryProducts);
             } catch (LoginException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -313,6 +333,18 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                                 + "please!",
                         "System Error", JOptionPane.ERROR_MESSAGE);
 
+            }
+        }
+
+        //MODIFIES: this
+        //EFFECTS: parses products in loaded shopping cart to the GUI panel
+        public void parseLoadedShoppingCart() {
+            for (Product p : shoppingCart.getRecommendationList()) {
+                int index = 0;
+                recommendationListModel.insertElementAt(p.getProductName(), index);
+                recommendationList.setSelectedIndex(index);
+                recommendationList.ensureIndexIsVisible(index);
+                index++;
             }
         }
 
@@ -413,10 +445,10 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //EFFECTS: sets the users input into textField as the shopper's name
     // throws LoginException if no name is inputted
     private void saveUsersName(String input) throws LoginException {
-        if (!(input == null)) {
+        if (!(input.length() == 0)) {
             shoppingCart.getShopper().setName(input);
         } else {
-            throw new LoginException();
+            throw new LoginException("Please enter your name.");
         }
     }
 
@@ -476,7 +508,11 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
 
     //EFFECTS: starts the application
     public static void main(String[] args) {
-        new MadeForMeSkinCareAppUI();
+        try {
+            new MadeForMeSkinCareAppUI();
+        } catch (IOException e) {
+            //pass
+        }
     }
 
 

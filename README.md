@@ -45,4 +45,4 @@ shopping cart will appear alongside a message alerting the user that their max p
 - You can save the state of my application by clicking the "Save" button on the shopping cart
 panel.
 - You can reload the state of my application by clicking the "Load" button on the shopping
-cart panel.
+cart panel. The shopping cart panel must empty in order for you to load a file.

@@ -76,10 +76,10 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     private static final int HEIGHT = MadeForMeSkinCareAppUI.HEIGHT;
     private Component theParent;
 
-//EFFECTS: constructs shopping cart panel
-    public ShoppingCartUI(ShoppingCart sc, Component parent) {
+    //EFFECTS: constructs shopping cart panel
+    public ShoppingCartUI(MadeForMeSkinCareAppUI ui, Component parent) {
         super("Shopping Cart", false, false, false, false);
-        shoppingCart = sc;
+        shoppingCart = ui.getShoppingCart();
         theParent = parent;
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
@@ -89,7 +89,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
 
         TheOrdinaryProducts theOrdinaryProducts = new TheOrdinaryProducts();
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
-        shopper = sc.getShopper();
+        shopper = ui.getShoppingCart().getShopper();
 
         cartListModel = new DefaultListModel();
 
@@ -144,7 +144,8 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     public void addProductToList(Product p) {
         cartListModel.addElement(p.getProductName());
         removeButton.setEnabled(true);
-        loadButton.setEnabled(true);
+        loadButton.setEnabled(false);
+        cartList.setSelectedIndex(shoppingCart.getProductsInCart().size() - 1);
     }
 
     //MODIFIES: this
@@ -153,14 +154,14 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
         public void actionPerformed(ActionEvent e) {
             int index = cartList.getSelectedIndex();
             cartListModel.remove(index);
-            int listIndex = shoppingCart.getProductsInCart().size() - 1;
-            Product product = shoppingCart.getProductsInCart().get(listIndex - index);
+            Product product = shoppingCart.getProductsInCart().get(index);
             shoppingCart.removeProductFromCart(product);
 
             int size = cartListModel.getSize();
 
             if (size == 0) {
                 removeButton.setEnabled(false);
+                loadButton.setEnabled(true);
 
             } else {
                 if (index == cartListModel.getSize()) {
@@ -202,10 +203,16 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     class LoadFile implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
-                shoppingCart = jsonReader.read();
+                ShoppingCart fileToLoad = jsonReader.read();
+                for (Product p : fileToLoad.getProductsInCart())  {
+                    shoppingCart.addProductToCart(p);
+                }
+                shopper = jsonReader.read().getShopper();
+                //shoppingCart = jsonReader.read();
                 cartListModel.removeAllElements();
+                int index = 0;
+
                 for (Product p : shoppingCart.getProductsInCart()) {
-                    int index = 0;
                     cartListModel.insertElementAt(p.getProductName(), index);
                     cartList.setSelectedIndex(index);
                     cartList.ensureIndexIsVisible(index);
@@ -217,6 +224,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
+            loadButton.setEnabled(false);
         }
     }
 
