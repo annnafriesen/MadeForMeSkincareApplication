@@ -4,12 +4,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writeable;
 
+import java.text.DecimalFormat;
+
 // Represents a shopper with a name, skin type, and their max price range for shopping.
 public class Shopper implements Writeable {
     private String customerName;
     private ConcernType concern;
     private SkinType skinType;
     private double maxPrice;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     //REQUIRES: Shopper name must be non-zero length and maxPrice must be > 0.
     //EFFECTS: creates a shopper object with an empty name, an empty default-type skin and concern type, and
@@ -48,18 +52,21 @@ public class Shopper implements Writeable {
     //EFFECTS: sets customer name to n
     public void setName(String n) {
         this.customerName = n;
+        EventLog.getInstance().logEvent(new Event("Set shopper's name: " + getCustomerName()));
     }
 
     //MODIFIES: this
     //EFFECTS: adds concerns to the shoppers list of concerns
     public void setConcern(ConcernType c) {
         this.concern = c;
+        EventLog.getInstance().logEvent(new Event("Set shopper's concern: " + getConcern()));
     }
 
     //MODIFIES: this
     //EFFECTS: sets the users skin type as either oily, combination or dry
     public void setSkinType(SkinType type) {
         this.skinType = type;
+        EventLog.getInstance().logEvent(new Event("Set shopper's skin type: " + getSkinType()));
     }
 
     //REQUIRES: input i must be > 0.
@@ -67,6 +74,7 @@ public class Shopper implements Writeable {
     //EFFECTS: sets the users max price as given
     public void setMaxPrice(double i) {
         this.maxPrice = i;
+        EventLog.getInstance().logEvent(new Event("Set shopper's price: $" + df.format(getMaxPrice())));
     }
 
     @Override

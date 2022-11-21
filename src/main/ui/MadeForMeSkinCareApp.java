@@ -68,7 +68,8 @@ public class MadeForMeSkinCareApp {
             }
         }
         System.out.println("Thank you for using the MadeForMe SkinCare App to start your skin care journey. "
-                + "Next time turn that wishlist into reality!");
+                + "Next time turn that wishlist into reality!\n");
+        shoppingCart.printLog(EventLog.getInstance());
     }
 
     // MODIFIES: this

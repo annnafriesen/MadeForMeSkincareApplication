@@ -46,3 +46,30 @@ shopping cart will appear alongside a message alerting the user that their max p
 panel.
 - You can reload the state of my application by clicking the "Load" button on the shopping
 cart panel. The shopping cart panel must empty in order for you to load a file.
+
+### Phase 4: Task 2
+**Sample event log**:
+
+Sun Nov 20 22:58:20 PST 2022
+Set shopper's name: Anna
+
+Sun Nov 20 22:58:22 PST 2022
+Set shopper's skin type: OILY
+
+Sun Nov 20 22:58:24 PST 2022
+Set shopper's price: $50.00
+
+Sun Nov 20 22:58:25 PST 2022
+Set shopper's concern: ACNE
+
+Sun Nov 20 22:58:29 PST 2022
+Added product: Retinol 1%
+
+Sun Nov 20 22:58:33 PST 2022
+Added product: Squalance Cleanser
+
+Sun Nov 20 22:58:40 PST 2022
+Removed product: Squalance Cleanser
+
+Sun Nov 20 22:58:45 PST 2022
+Added product: Salicylic Acid 2% Solution

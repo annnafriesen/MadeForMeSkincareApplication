@@ -64,6 +64,7 @@ public class ShoppingCart implements Writeable {
         if (p.getPrice() + this.totalCost <= shopper.getMaxPrice()) {
             this.productsInCart.add(p);
             this.totalCost += p.getPrice();
+            EventLog.getInstance().logEvent(new Event("Added product: " + p.getProductName()));
             return true;
         } else {
             wishList.add(p);
@@ -76,6 +77,7 @@ public class ShoppingCart implements Writeable {
     public void removeProductFromCart(Product p) {
         this.productsInCart.remove(p);
         this.totalCost -= p.getPrice();
+        EventLog.getInstance().logEvent(new Event("Removed product: " + p.getProductName()));
     }
 
     //MODIFIES: this
@@ -144,6 +146,13 @@ public class ShoppingCart implements Writeable {
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(getShopper().toJson());
         return jsonArray;
+    }
+
+    //EFFECTS: prints log of events in eventLog
+    public void printLog(EventLog el) {
+        for (Event next : el) {
+            System.out.println(next.toString() + "\n");
+        }
     }
 
 }
