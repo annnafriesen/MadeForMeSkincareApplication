@@ -50,26 +50,33 @@ cart panel. The shopping cart panel must empty in order for you to load a file.
 ### Phase 4: Task 2
 **Sample event log**:
 
-Sun Nov 20 22:58:20 PST 2022
 Set shopper's name: Anna
 
-Sun Nov 20 22:58:22 PST 2022
 Set shopper's skin type: OILY
 
-Sun Nov 20 22:58:24 PST 2022
 Set shopper's price: $50.00
 
-Sun Nov 20 22:58:25 PST 2022
 Set shopper's concern: ACNE
 
-Sun Nov 20 22:58:29 PST 2022
 Added product: Retinol 1%
 
-Sun Nov 20 22:58:33 PST 2022
 Added product: Squalance Cleanser
 
-Sun Nov 20 22:58:40 PST 2022
 Removed product: Squalance Cleanser
 
-Sun Nov 20 22:58:45 PST 2022
 Added product: Salicylic Acid 2% Solution
+
+### Phase 4: Task 2
+Future refactor changes:
+- Implement the Singleton Design Pattern in the MadeForMeSkinCareAppUI and ShoppingCartUI. Right now, the Shopping cart
+takes in the MadeForMeSkinCareAppUI's shopping cart instantiation and then assigns a field to this reference this
+object, but when debugging I found that there is a second object created. This would get rid of the issue of having to 
+empty the shopping cart panel before loading from the JSON file. 
+- Eliminate semantic coupling between the ShoppingCartUI and the MadeForMeSkinCareUI. I would create an abstract class 
+that ShoppingCartUI and MadeForMeSkinCareUI would extend, and this abstract class would contain similar fields between 
+the two classes, such as shoppingCart, shopper and the View Button. Some methods that I would pull into the abstract
+class would be the ViewProduct action, as both classes implement this field with minor differences in their
+implementation. 
+- To increase cohesion, I would extract some methods from the MadeForMeSkinCareAppUI to make the class less long 
+and more readable. For example, I might make an "Actions" class where I put all the actions used in the 
+MadeForMeSkinCareAppUI.

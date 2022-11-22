@@ -36,6 +36,11 @@ public class EventLog implements Iterable<Event> {
         logEvent(new Event("Event log cleared."));
     }
 
+    //EFFECTS: getter for events
+    public Collection<Event> getEvents() {
+        return events;
+    }
+
     @Override
     public Iterator<Event> iterator() {
         return events.iterator();

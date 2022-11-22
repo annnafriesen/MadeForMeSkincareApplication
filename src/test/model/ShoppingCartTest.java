@@ -17,8 +17,27 @@ public class ShoppingCartTest {
         shopper = new Shopper();
         shopper.setName("Julia");
         shopper.setSkinType(SkinType.COMBINATION);
+        shopper.setConcern(ConcernType.ACNE);
         shopper.setMaxPrice(55);
         shoppingCart = new ShoppingCart(shopper);
+    }
+
+    @Test
+    void testPrintLog() {
+        shoppingCart.addProductToCart(new Moisturizer("Natural Moisturizer",
+                "Coconut oil moisturizer", "Coconut oil, aloe vera", 13.50));
+        shoppingCart.removeProductFromCart(new Moisturizer("Natural Moisturizer",
+                "Coconut oil moisturizer", "Coconut oil, aloe vera", 13.50));
+        shoppingCart.printLog(EventLog.getInstance());
+        assertTrue(EventLog.getInstance().getEvents().contains(new Event("Set shopper's name: Julia")));
+        assertTrue(EventLog.getInstance().getEvents().contains(new
+                Event("Set shopper's skin type: COMBINATION")));
+        assertTrue(EventLog.getInstance().getEvents().contains(new Event("Set shopper's price: $55.00")));
+        assertTrue(EventLog.getInstance().getEvents().contains(new Event("Set shopper's concern: ACNE")));
+        assertTrue(EventLog.getInstance().getEvents().contains(new
+                Event("Added product: Natural Moisturizer")));
+        assertTrue(EventLog.getInstance().getEvents().contains(new
+                Event("Removed product: Natural Moisturizer")));
     }
 
     @Test
@@ -205,8 +224,8 @@ public class ShoppingCartTest {
     void testCheckForDiscountExactAmountRequired() {
         Product moisturizer1 = new Moisturizer("Natural Moisturizer",
                 "Coconut oil moisturizer", "Coconut oil, aloe vera",
-                (AMOUNT_NEEDED_FOR_DISCOUNT/(1 - DISCOUNT)) + 0.01);
-        shopper.setMaxPrice((AMOUNT_NEEDED_FOR_DISCOUNT/(1 - DISCOUNT)) + 1);
+                (AMOUNT_NEEDED_FOR_DISCOUNT / (1 - DISCOUNT)) + 0.01);
+        shopper.setMaxPrice((AMOUNT_NEEDED_FOR_DISCOUNT / (1 - DISCOUNT)) + 1);
         assertTrue(shoppingCart.addProductToCart(moisturizer1));
         assertTrue(shoppingCart.checkForDiscount());
     }
@@ -215,8 +234,8 @@ public class ShoppingCartTest {
     void testCheckForDiscountOneAboveDiscount() {
         Product moisturizer1 = new Moisturizer("Natural Moisturizer",
                 "Coconut oil moisturizer", "Coconut oil, aloe vera",
-                (AMOUNT_NEEDED_FOR_DISCOUNT/(1 - DISCOUNT)) + 0.02);
-        shopper.setMaxPrice((AMOUNT_NEEDED_FOR_DISCOUNT/(1 - DISCOUNT)) + 1);
+                (AMOUNT_NEEDED_FOR_DISCOUNT / (1 - DISCOUNT)) + 0.02);
+        shopper.setMaxPrice((AMOUNT_NEEDED_FOR_DISCOUNT / (1 - DISCOUNT)) + 1);
         assertTrue(shoppingCart.addProductToCart(moisturizer1));
         assertTrue(shoppingCart.checkForDiscount());
     }

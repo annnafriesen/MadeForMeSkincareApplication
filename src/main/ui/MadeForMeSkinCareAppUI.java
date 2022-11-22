@@ -30,6 +30,8 @@ import static model.ShoppingCart.DISCOUNT;
 // See ShoppingCartUI class for copyright notice.
 // In my setBorder() method, I reference to the website Javacodex (https://www.javacodex.com/More-Examples/2/11) to
 // learn how to create a border to display the discount message.
+// In my closeActions() method, I reference https://www.clear.rice.edu/comp310/JavaResources/frame_close.html when
+// creating a WindowAction and WindowListener
 
 //Represents GUI of the MadeForMe SkinCare application.
 public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
@@ -93,6 +95,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         startFrame = new JInternalFrame("Questionnaire", false, false, false,
                 false);
         startFrame.setLayout(new BorderLayout());
+        closeActions();
         shoppingCartFrame = new JInternalFrame("Shopping Cart", false, false, false,
                 false);
         shoppingCartFrame.setLayout(new BorderLayout());
@@ -101,9 +104,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         setTitle("MadeForMe SkinCare");
         setSize(WIDTH, HEIGHT);
 
-        addQuestionnairePanel();
-        addRecommendationPanel();
-        addShoppingCartPanel();
+        addPanels();
 
         startFrame.pack();
         startFrame.setVisible(true);
@@ -124,6 +125,13 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         shoppingCart = new ShoppingCart(shopper);
         TheOrdinaryProducts theOrdinaryProducts = new TheOrdinaryProducts();
         listOfOrdinaryProducts = theOrdinaryProducts.getListOfTheOrdinaryProducts();
+    }
+
+    //EFFECTS: adds questionnaire, shopping cart and recommendation list panel
+    public void addPanels() {
+        addQuestionnairePanel();
+        addRecommendationPanel();
+        addShoppingCartPanel();
     }
 
     //EFFECTS: getter for shopping cart field
@@ -322,7 +330,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
                 addButtonVisibility();
                 JOptionPane.showMessageDialog(null,
                         "Here is your personalized recommendation list, " + shopper.getCustomerName() + "! "
-                        + "\nClick 'ok' to start adding to your shopping cart.",
+                                + "\nClick 'ok' to start adding to your shopping cart.",
                         "Begin your skin journey!",
                         JOptionPane.INFORMATION_MESSAGE, theOrdinaryProducts);
             } catch (LoginException e) {
@@ -505,6 +513,17 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
 
     }
+
+    private void closeActions() {
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                shoppingCart.printLog(EventLog.getInstance());
+                System.exit(0);
+            }
+        });
+    }
+
 
     //EFFECTS: starts the application
     public static void main(String[] args) {

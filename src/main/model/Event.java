@@ -8,19 +8,11 @@ import java.util.Date;
 
 //Represents a shopping cart or shopper event.
 public class Event {
-    private static final int HASH_CONSTANT = 13;
-    private Date dateLogged;
     private String description;
 
     //Creates an event with the given description and the current date/time stamp
     public Event(String description) {
-        dateLogged = Calendar.getInstance().getTime();
         this.description = description;
-    }
-
-    //Gets the date of this event (includes time).
-    public Date getDate() {
-        return dateLogged;
     }
 
     // Gets the description of this event.
@@ -29,28 +21,22 @@ public class Event {
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other == null) {
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        if (other.getClass() != this.getClass()) {
-            return false;
-        }
+        Event event = (Event) o;
 
-        Event otherEvent = (Event) other;
-
-        return (this.dateLogged.equals(otherEvent.dateLogged)
-                && this.description.equals(otherEvent.description));
+        return description.equals(event.description);
     }
 
     @Override
     public int hashCode() {
-        return (HASH_CONSTANT * dateLogged.hashCode() + description.hashCode());
+        return description.hashCode();
     }
 
-    @Override
-    public String toString() {
-        return dateLogged.toString() + "\n" + description;
-    }
 }

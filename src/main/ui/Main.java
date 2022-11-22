@@ -1,7 +1,5 @@
 package ui;
 
-import model.TheOrdinaryProducts;
-
 import java.io.FileNotFoundException;
 
 //Runs MadeForMe SkinCare application.

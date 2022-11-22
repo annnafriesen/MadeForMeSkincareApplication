@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 //REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project provided in CPSC 210,
 // which can be found at https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/.
@@ -14,22 +14,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 //Tests for the Event class
 public class EventTest {
     private Event e;
-    private Date d;
+    private Event e2;
 
     @BeforeEach
     public void runBefore() {
-        e = new Event("Sensor open at door");   // (1)
-        d = Calendar.getInstance().getTime();   // (2)
+        e = new Event("Sensor open at door");
+        e2 = new Event("Sensor closed at door");
     }
 
     @Test
     public void testEvent() {
         assertEquals("Sensor open at door", e.getDescription());
-        assertEquals(d, e.getDate());
+        assertFalse(e.equals(e2));
+        assertFalse(e.equals(null));
+        assertEquals(-195810773, e.hashCode());
     }
 
-    @Test
-    public void testToString() {
-        assertEquals(d.toString() + "\n" + "Sensor open at door", e.toString());
-    }
+
+
 }
