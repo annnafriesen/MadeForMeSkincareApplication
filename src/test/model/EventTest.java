@@ -15,17 +15,23 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EventTest {
     private Event e;
     private Event e2;
+    private ShoppingCart sc;
+    private Shopper s;
 
     @BeforeEach
     public void runBefore() {
         e = new Event("Sensor open at door");
         e2 = new Event("Sensor closed at door");
+        s = new Shopper();
+        sc = new ShoppingCart(s);
+
     }
 
     @Test
     public void testEvent() {
         assertEquals("Sensor open at door", e.getDescription());
         assertFalse(e.equals(e2));
+        assertFalse(e.equals(sc));
         assertFalse(e.equals(null));
         assertEquals(-195810773, e.hashCode());
     }
