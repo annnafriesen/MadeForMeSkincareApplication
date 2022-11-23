@@ -357,8 +357,10 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         }
 
         //MODIFIES: this
-        //EFFECTS: saves users input into respective category: name, max price, skin type, and concern type
+        //EFFECTS: saves users input into respective category: name, max price, skin type, and concern type; clears
+        // event log to prevent logging of data in JSON file before load action
         private void saveUserInput(String selectedSkinType, String selectedConcernType) throws LoginException {
+            EventLog.getInstance().clear();
             saveSkinTypeAnswers(selectedSkinType);
             saveConcernAnswers(selectedConcernType);
             saveUsersName(shopperName.getText());
