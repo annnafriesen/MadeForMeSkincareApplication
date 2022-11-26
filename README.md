@@ -50,33 +50,41 @@ cart panel. The shopping cart panel must empty in order for you to load a file.
 ### Phase 4: Task 2
 **Sample event log**:
 
+Fri Nov 25 12:13:02 PST 2022
 Set shopper's name: Anna
 
-Set shopper's skin type: OILY
-
+Fri Nov 25 12:13:02 PST 2022
 Set shopper's price: $50.00
 
-Set shopper's concern: ACNE
+Fri Nov 25 12:13:02 PST 2022
+Set shopper's skin type: OILY
 
-Added product: Retinol 1%
+Fri Nov 25 12:13:02 PST 2022
+Set shopper's concern: HYPERPIGMENTATION
 
+Fri Nov 25 12:13:04 PST 2022
+Added product: Natural Moisturizer
+
+Fri Nov 25 12:13:05 PST 2022
 Added product: Squalance Cleanser
 
+Fri Nov 25 12:13:06 PST 2022
 Removed product: Squalance Cleanser
-
-Added product: Salicylic Acid 2% Solution
 
 ### Phase 4: Task 2
 Future refactor changes:
-- Implement the Singleton Design Pattern in the MadeForMeSkinCareAppUI and ShoppingCartUI. Right now, the Shopping cart
-takes in the MadeForMeSkinCareAppUI's shopping cart instantiation and then assigns a field to this reference this
+- Implement the Singleton Design Pattern in the MadeForMeSkinCareAppGUI and ShoppingCartUI. Right now, the Shopping cart
+takes in the MadeForMeSkinCareAppGUI's shopping cart instantiation and then assigns a field to this reference this
 object, but when debugging I found that there is a second object created. This would get rid of the issue of having to 
 empty the shopping cart panel before loading from the JSON file. 
-- Eliminate semantic coupling between the ShoppingCartUI and the MadeForMeSkinCareUI. I would create an abstract class 
+- Eliminate semantic coupling between the ShoppingCartUI and the MadeForMeSkinCareGUI. I would create an abstract class 
 that ShoppingCartUI and MadeForMeSkinCareUI would extend, and this abstract class would contain similar fields between 
 the two classes, such as shoppingCart, shopper and the View Button. Some methods that I would pull into the abstract
 class would be the ViewProduct action, as both classes implement this field with minor differences in their
 implementation. 
-- To increase cohesion, I would extract some methods from the MadeForMeSkinCareAppUI to make the class less long 
+- To increase cohesion, I would extract some methods from the MadeForMeSkinCareAppGUI to make the class less long 
 and more readable. For example, I might make an "Actions" class where I put all the actions used in the 
-MadeForMeSkinCareAppUI.
+MadeForMeSkinCareAppUI. As well, to ensure that button commands also appear in the same format in the console app, I 
+could extract a method called "buttonInfoFormat" where it takes in the button command and prints the command in the 
+format "Type '" + COMMAND + "' load shopping cart from file". This would ensure all button commands are printed out in
+a consistent way which would increase readability of the code.

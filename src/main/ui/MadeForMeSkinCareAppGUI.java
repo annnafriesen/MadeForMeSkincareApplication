@@ -34,7 +34,7 @@ import static model.ShoppingCart.DISCOUNT;
 // creating a WindowAction and WindowListener
 
 //Represents GUI of the MadeForMe SkinCare application.
-public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListener {
+public class MadeForMeSkinCareAppGUI extends JFrame implements ListSelectionListener {
     public static final int WIDTH = 750;
     public static final int HEIGHT = 600;
     private final JDesktopPane desktop;
@@ -86,7 +86,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private static final String CONCERN_TYPE_REDNESS = "redness";
 
     //EFFECTS: constructs the MadeForMeSkinCareApp gui with a desktop and two panels
-    private MadeForMeSkinCareAppUI() throws IOException {
+    private MadeForMeSkinCareAppGUI() throws IOException {
         setup();
 
         desktop = new JDesktopPane();
@@ -361,10 +361,10 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
         // event log to prevent logging of data in JSON file before load action
         private void saveUserInput(String selectedSkinType, String selectedConcernType) throws LoginException {
             EventLog.getInstance().clear();
-            saveSkinTypeAnswers(selectedSkinType);
-            saveConcernAnswers(selectedConcernType);
             saveUsersName(shopperName.getText());
             saveMaxPrice(maxPrice.getText());
+            saveSkinTypeAnswers(selectedSkinType);
+            saveConcernAnswers(selectedConcernType);
         }
 
         //MODIFIES: this
@@ -511,7 +511,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     private class DesktopFocusAction extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            MadeForMeSkinCareAppUI.this.requestFocusInWindow();
+            MadeForMeSkinCareAppGUI.this.requestFocusInWindow();
         }
 
     }
@@ -530,7 +530,7 @@ public class MadeForMeSkinCareAppUI extends JFrame implements ListSelectionListe
     //EFFECTS: starts the application
     public static void main(String[] args) {
         try {
-            new MadeForMeSkinCareAppUI();
+            new MadeForMeSkinCareAppGUI();
         } catch (IOException e) {
             //pass
         }

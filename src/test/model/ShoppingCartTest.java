@@ -3,6 +3,9 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
 import static model.ShoppingCart.DISCOUNT;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,15 +32,13 @@ public class ShoppingCartTest {
         shoppingCart.removeProductFromCart(new Moisturizer("Natural Moisturizer",
                 "Coconut oil moisturizer", "Coconut oil, aloe vera", 13.50));
         shoppingCart.printLog(EventLog.getInstance());
-        assertTrue(EventLog.getInstance().getEvents().contains(new Event("Set shopper's name: Julia")));
-        assertTrue(EventLog.getInstance().getEvents().contains(new
-                Event("Set shopper's skin type: COMBINATION")));
-        assertTrue(EventLog.getInstance().getEvents().contains(new Event("Set shopper's price: $55.00")));
-        assertTrue(EventLog.getInstance().getEvents().contains(new Event("Set shopper's concern: ACNE")));
-        assertTrue(EventLog.getInstance().getEvents().contains(new
-                Event("Added product: Natural Moisturizer")));
-        assertTrue(EventLog.getInstance().getEvents().contains(new
-                Event("Removed product: Natural Moisturizer")));
+        List<Event> events = new ArrayList<>(EventLog.getInstance().getEvents());
+        assertEquals("Event log cleared.", events.get(0).getDescription());
+        assertEquals("Set shopper's name: Julia", events.get(1).getDescription());
+        assertEquals("Set shopper's skin type: COMBINATION", events.get(2).getDescription());
+        assertEquals("Set shopper's concern: ACNE", events.get(3).getDescription());
+        assertEquals("Set shopper's price: $55.00", events.get(4).getDescription());
+        assertEquals("Added product: Natural Moisturizer", events.get(5).getDescription());
     }
 
     @Test
@@ -49,6 +50,8 @@ public class ShoppingCartTest {
         assertEquals(1, shoppingCart.getProductsInCart().size());
         assertEquals(13.50, shoppingCart.getTotalPrice());
         assertFalse(shoppingCart.checkForDiscount());
+        assertTrue(EventLog.getInstance().getEvents().contains(new
+                Event("Added product: Natural Moisturizer")));
     }
 
     @Test
@@ -172,6 +175,8 @@ public class ShoppingCartTest {
                 "Coconut oil moisturizer", "Coconut oil, aloe vera", 13.50);
         shoppingCart.addProductToCart(moisturizer1);
         shoppingCart.removeProductFromCart(moisturizer1);
+        assertTrue(EventLog.getInstance().getEvents().contains(new
+                Event("Removed product: Natural Moisturizer")));
         assertEquals(0, shoppingCart.getProductsInCart().size());
         assertEquals(0.0, shoppingCart.getTotalPrice());
     }

@@ -75,12 +75,12 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
     private JsonReader jsonReader;
     private static final String JSON_STORE = "./data/shoppingCart.json";
     private final ImageIcon theOrdinaryLogo = new ImageIcon("model/theOrdinaryLogo.png");
-    private static final int WIDTH = MadeForMeSkinCareAppUI.WIDTH;
-    private static final int HEIGHT = MadeForMeSkinCareAppUI.HEIGHT;
+    private static final int WIDTH = MadeForMeSkinCareAppGUI.WIDTH;
+    private static final int HEIGHT = MadeForMeSkinCareAppGUI.HEIGHT;
     private Component theParent;
 
     //EFFECTS: constructs shopping cart panel
-    public ShoppingCartUI(MadeForMeSkinCareAppUI ui, Component parent) {
+    public ShoppingCartUI(MadeForMeSkinCareAppGUI ui, Component parent) {
         super("Shopping Cart", false, false, false, false);
         shoppingCart = ui.getShoppingCart();
         theParent = parent;

@@ -21,7 +21,7 @@ import static model.ShoppingCart.DISCOUNT;
 // to have local variables for each command, as seen in FitLifeGymKiosk as well as the use of switch statements.
 
 //represents the MadeForMe SkinCare Application
-public class MadeForMeSkinCareApp {
+public class MadeForMeSkinCareConsoleApp {
     private Shopper shopper;
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
@@ -42,7 +42,7 @@ public class MadeForMeSkinCareApp {
 
 
     //EFFECTS: runs the MadeForMe Skin Care app
-    public MadeForMeSkinCareApp() throws FileNotFoundException {
+    public MadeForMeSkinCareConsoleApp() throws FileNotFoundException {
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         runMadeForMeApp();

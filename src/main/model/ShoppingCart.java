@@ -151,7 +151,7 @@ public class ShoppingCart implements Writeable {
     //EFFECTS: prints log of events in eventLog
     public void printLog(EventLog el) {
         for (Event next : el) {
-            System.out.println(next.getDescription() + "\n");
+            System.out.println(next.toString() + "\n");
         }
     }
 
