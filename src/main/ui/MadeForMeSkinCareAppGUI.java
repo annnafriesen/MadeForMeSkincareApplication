@@ -516,6 +516,7 @@ public class MadeForMeSkinCareAppGUI extends JFrame implements ListSelectionList
 
     }
 
+    //EFFECTS: Represents actions taken while closing app; prints eventLog to console
     private void closeActions() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
