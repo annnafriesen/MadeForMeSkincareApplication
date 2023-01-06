@@ -1,9 +1,9 @@
 package persistence;
 
-import model.ConcernType;
-import model.Product;
+import model.types.ConcernType;
+import model.products.Product;
 import model.ShoppingCart;
-import model.SkinType;
+import model.types.SkinType;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo which can
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. My project uses this demo's
 // strategy of testing a non-existent file, an empty file and a "normal" file.
 

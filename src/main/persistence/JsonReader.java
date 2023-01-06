@@ -7,9 +7,12 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import model.*;
+import model.products.*;
+import model.types.ConcernType;
+import model.types.SkinType;
 import org.json.*;
 
-//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo which can
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. My project has similar read() and
 // readFile() functions, as well as a similar structure of a parsing method followed by an json addition method for
 // each array in the JsonObject.

@@ -1,13 +1,13 @@
 package persistence;
 
-import model.ConcernType;
-import model.Product;
+import model.types.ConcernType;
+import model.products.Product;
 import model.ShoppingCart;
-import model.SkinType;
+import model.types.SkinType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo which can
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. Similar to demo's check function,
 // except specific to my project.
 

@@ -1,5 +1,13 @@
 package model;
 
+import model.events.Event;
+import model.events.EventLog;
+import model.products.Exfoliator;
+import model.products.Moisturizer;
+import model.products.Product;
+import model.products.Serum;
+import model.types.ConcernType;
+import model.types.SkinType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

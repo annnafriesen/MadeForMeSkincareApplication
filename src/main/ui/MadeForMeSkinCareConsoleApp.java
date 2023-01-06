@@ -1,6 +1,10 @@
 package ui;
 
 import model.*;
+import model.events.EventLog;
+import model.products.Product;
+import model.types.ConcernType;
+import model.types.SkinType;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -12,11 +16,11 @@ import java.util.Scanner;
 import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
 import static model.ShoppingCart.DISCOUNT;
 
-//REFERENCE LIST: the following code mimics behaviour seen in TellerApp project provided in CPSC 210,
-// which can be found at https://github.students.cs.ubc.ca/CPSC210/TellerApp.git. I referenced the TellerApp when
-// designing my ui, especially when creating the init() and runMadeForMeApp(). As well, I tried to create a similar
-// flow to the TellerApp by having a general processCommand() method.
-// Additionally, I referenced the FitLifeGymKiosk Project provided in the CPSC 210 repository, which is found at
+//REFERENCE LIST: the following code mimics behaviour seen in TellerApp project which can be found at
+//  https://github.students.cs.ubc.ca/CPSC210/TellerApp.git. I referenced the TellerApp when designing my ui,
+// especially when creating the init() and runMadeForMeApp(). As well, I tried to create a similar flow to the
+//  TellerApp by having a general processCommand() method.
+// Additionally, I referenced the FitLifeGymKiosk Project which can be found at
 //  https://github.students.cs.ubc.ca/CPSC210/LongFormProblemStarters/tree/main/FitLifeGymKiosk. I modelled my program
 // to have local variables for each command, as seen in FitLifeGymKiosk as well as the use of switch statements.
 

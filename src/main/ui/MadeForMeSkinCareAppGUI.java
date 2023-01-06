@@ -1,6 +1,10 @@
 package ui;
 
 import model.*;
+import model.events.EventLog;
+import model.products.Product;
+import model.types.ConcernType;
+import model.types.SkinType;
 import persistence.JsonReader;
 
 import javax.security.auth.login.LoginException;
@@ -20,9 +24,9 @@ import static model.ShoppingCart.AMOUNT_NEEDED_FOR_DISCOUNT;
 import static model.ShoppingCart.DISCOUNT;
 
 
-//REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project provided in CPSC 210,
-// which can be found at https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/. I referenced the AlarmSystem to
-// learn how to add panels and buttons to my gui, as well as to learn how action events work.
+//REFERENCE LIST: the following code mimics behaviour seen in the AlarmSystem project which can be found at
+// https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/. I referenced the AlarmSystem to learn how to add panels
+// and buttons to my gui, as well as to learn how action events work.
 // Additionally, I referenced the ListDemo Project provided in the Java tutorials on Oracle.com, which can be found at
 // https://docs.oracle.com/javase/tutorial/displayCode.html?code=https:
 // docs.oracle.com/javase/tutorial/uiswing/examples/components/ListDemoProject/src/components/ListDemo.java. I
@@ -91,7 +95,7 @@ public class MadeForMeSkinCareAppGUI extends JFrame implements ListSelectionList
 
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
-        desktop.setBackground(Color.ORANGE);
+        desktop.setBackground(Color.PINK);
         startFrame = new JInternalFrame("Questionnaire", false, false, false,
                 false);
         startFrame.setLayout(new BorderLayout());

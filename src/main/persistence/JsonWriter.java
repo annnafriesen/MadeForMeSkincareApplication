@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 
-//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo provided in CPSC 210, which can
+//REFERENCE LIST: the following code mimics behaviour seen in JsonSerializationDemo which can
 // be found at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo.git. I use the same five methods to
 // write my arrays as seen in JsonSerializationDemo.
 

@@ -1,6 +1,6 @@
 package ui;
 
-import model.Product;
+import model.products.Product;
 import model.Shopper;
 import model.ShoppingCart;
 import model.TheOrdinaryProducts;

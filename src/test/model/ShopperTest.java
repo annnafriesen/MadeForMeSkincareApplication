@@ -1,5 +1,7 @@
 package model;
 
+import model.types.ConcernType;
+import model.types.SkinType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

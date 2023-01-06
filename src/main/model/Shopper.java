@@ -1,5 +1,9 @@
 package model;
 
+import model.events.Event;
+import model.events.EventLog;
+import model.types.ConcernType;
+import model.types.SkinType;
 import org.json.JSONObject;
 import persistence.Writeable;
 

@@ -1,5 +1,6 @@
 package model;
 
+import model.events.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,8 +9,8 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project provided in CPSC 210,
-// which can be found at https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/.
+//REFERENCE LIST: the following code mimics behaviour seen in AlarmSystem project, which can be found at
+// https://github.students.cs.ubc.ca/CPSC210/AlarmSystem.git/.
 
 //Tests for the Event class
 public class EventTest {
