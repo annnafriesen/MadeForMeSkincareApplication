@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.events.Event;
 import model.events.EventLog;
 import model.products.Product;
 import model.types.ConcernType;
@@ -26,6 +27,7 @@ import static model.ShoppingCart.DISCOUNT;
 
 //represents the MadeForMe SkinCare Application
 public class MadeForMeSkinCareConsoleApp {
+
     private Shopper shopper;
     private ShoppingCart shoppingCart;
     private List<Product> listOfOrdinaryProducts;
@@ -384,12 +386,11 @@ public class MadeForMeSkinCareConsoleApp {
     //MODIFIES: this
     //EFFECTS: tries to add product to shopping cart, and tells user if successful or not
     private void addToCart(int productNumber) {
-
         if (shoppingCart.addProductToCart(shoppingCart.getRecommendationList().get(productNumber))) {
             System.out.println("\nThe product was added to your shopping cart!");
         } else {
-            System.out.println("\nProduct cannot be added to cart as price limit is reached, but it has been added to "
-                    + "your wish list.");
+            System.out.println("\nProduct cannot be added to cart as price limit is reached, but it has been added"
+                    + " to your wish list.");
         }
         displayProductLocationOptions();
         String command = input.next();
@@ -497,5 +498,14 @@ public class MadeForMeSkinCareConsoleApp {
         displayProductLocationOptions();
         String command = input.next();
         processCommandShoppingCart(command);
+    }
+
+    //EFFECTS: starts the application
+    public static void main(String[] args) {
+        try {
+            new MadeForMeSkinCareConsoleApp();
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to run application: file not found");
+        }
     }
 }

@@ -22,6 +22,17 @@ public class ShoppingCart implements Writeable {
     public static final double DISCOUNT = 0.15;
     public static final double AMOUNT_NEEDED_FOR_DISCOUNT = 50;
 
+//    //REQUIRES: price must be >= 0 and price = 0 only when cart is empty
+//    //MODIFIES: this
+//    //EFFECTS: creates a shopping cart with an empty cart and initial cart total of $0.00.
+//    public ShoppingCart(Shopper shopper) {
+//        this.shopper = shopper;
+//        this.productsInCart = new ArrayList<>();
+//        this.totalCost = 0.0;
+//        this.wishList = new ArrayList<>();
+//        this.recommendationList = new ArrayList<>();
+//    }
+
     //REQUIRES: price must be >= 0 and price = 0 only when cart is empty
     //MODIFIES: this
     //EFFECTS: creates a shopping cart with an empty cart and initial cart total of $0.00.
@@ -33,12 +44,10 @@ public class ShoppingCart implements Writeable {
         this.recommendationList = new ArrayList<>();
     }
 
-    //EFFECTS: returns a list of all the products in the shopping cart
     public Shopper getShopper() {
         return shopper;
     }
 
-    //EFFECTS: returns a list of all the products in the shopping cart
     public List<Product> getProductsInCart() {
         return productsInCart;
     }
@@ -57,7 +66,6 @@ public class ShoppingCart implements Writeable {
     public double getTotalPrice() {
         return totalCost;
     }
-
 
     //MODIFIES: this
     //EFFECTS: adds a product to the shopping cart if the total cost of the cart (including the new product)

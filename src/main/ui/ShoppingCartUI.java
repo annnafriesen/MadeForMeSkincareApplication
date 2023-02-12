@@ -179,6 +179,7 @@ public class ShoppingCartUI extends JInternalFrame implements ListSelectionListe
             if (size == 0) {
                 removeButton.setEnabled(false);
                 loadButton.setEnabled(true);
+                viewButton.setEnabled(false);
 
             } else {
                 if (index == cartListModel.getSize()) {

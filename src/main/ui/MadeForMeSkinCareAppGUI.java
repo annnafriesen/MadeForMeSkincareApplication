@@ -95,7 +95,7 @@ public class MadeForMeSkinCareAppGUI extends JFrame implements ListSelectionList
 
         desktop = new JDesktopPane();
         desktop.addMouseListener(new DesktopFocusAction());
-        desktop.setBackground(Color.PINK);
+        desktop.setBackground(Color.ORANGE);
         startFrame = new JInternalFrame("Questionnaire", false, false, false,
                 false);
         startFrame.setLayout(new BorderLayout());
@@ -118,6 +118,7 @@ public class MadeForMeSkinCareAppGUI extends JFrame implements ListSelectionList
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         centreOnScreen();
         setVisible(true);
+        EventLog.getInstance().clear();
     }
 
     //MODIFIES: this
@@ -411,7 +412,6 @@ public class MadeForMeSkinCareAppGUI extends JFrame implements ListSelectionList
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(0));
             shoppingCart.addProductToRecommendationList(listOfOrdinaryProducts.get(8));
         }
-
     }
 
     //MODIFIES: this
